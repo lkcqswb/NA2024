@@ -50,10 +50,10 @@
 
 \section*{IV}
 \begin{flushleft}
-  由泰勒展开，$f(x_n)=f(x_0)+f^{'}(x_0)*(x_n-x_0)+\frac{f^{''}(\xi_1)}{2!}(x_n-x_0)^2$  $\xi_1 \in [min(x_n,x_0),max(x_n,x_0)]$\\
-  除以$f^{'}(x_0)$,得$x_0-x_n+\frac{f(x_n)-f(x_0)}{f^{'}(x_0)}=\frac{f^{''}(\xi_1)}{2!f^{'}(x_0)}(x_n-x_0)^2$\\
-  左式又等于$x_1-x_{n+1}=e_1-e_{n+1}=\frac{f^{''}(\xi_1)}{2!f^{'}(x_0)}(e_n-e_0)^2$\\
-  考虑到$f \in C^2$，且$f^{'}(x_0) \neq 0$，故存在邻域，使得$f'$与$f^{''}$在邻域内均不为0。\\
+  由泰勒展开，
+  $x_{n+1}-\alpha=x_n-\alpha-\frac{f(x_n)-f(\alpha)}{f^{'}(x_0)}$\\
+  $=(x_n-\alpha)(1-\frac{f^{'}(\xi)}{f^{'}(x_0)})$  $\xi \in [min(x_n,\alpha),max(x_n,\alpha)]$\\
+  所以可取s=1,C=$(1-\frac{f^{'}(\xi)}{f^{'}(x_0)})$  $\xi \in [min(x_n,\alpha),max(x_n,\alpha)]$\\
   
 
 
@@ -99,7 +99,7 @@
 \begin{flushleft}
 \textbf{$\cdot$\\}  
   可以考虑从高阶无穷小入手啊。\\
-  计算$f(x_+\Delta x)/(\Delta x)^p$，令$\Delta x$趋于0的值，若对p=0,1，2，3……k-1均近似为0，p=k时不收敛为0，则为k重零点。\\
+  计算$\frac{f(x_n+\Delta x)}{(\Delta x)^p}$，令$\Delta x$趋于0的值，若对p=0,1，2，3……k-1均近似为0，p=k时不收敛为0，则为k重零点。\\
 
 \textbf{$\cdot$\\}  
   根为r
@@ -110,13 +110,13 @@
   因为$f^{(k)}(r) \neq 0$,所以可取一个极小邻域$\delta$,使得对$x \in [r-\delta,r+\delta], f^{(k)}(x) \neq 0$,且均同号
   故$x_{n+1}=x_n-k\frac{f(x_n)}{f^{'}(x_n)}=x_n-\frac{\frac{f^{(k)}(\xi_1)}{k!}(x_n-r)^k}{\frac{f^{(k)}(\xi_2)}{(k-1)!}(x_n-r)^{k-1}}$\\
   $=x_n-k\frac{x_n-r}{k}$\\
-  $|x_{n+1}-r|=|x_n-r|*|1-\frac{f^{(k)}(\xi_1)}{f^{(k)}(\xi_2)}|$
-
+  $|x_{n+1}-r|=|x_n-r|*|1-\frac{f^{(k)}(\xi_1)}{f^{(k)}(\xi_2)}|$\\
+  
 \end{flushleft}
 
 
 
 \section*{Conclusion}
-
+暂无
 
 \end{document}
