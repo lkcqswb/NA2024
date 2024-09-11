@@ -50,7 +50,7 @@
 
 \section*{IV}
 \begin{flushleft}
-  由泰勒展开，
+  由拉格朗日，
   $x_{n+1}-\alpha=x_n-\alpha-\frac{f(x_n)-f(\alpha)}{f^{'}(x_0)}$\\
   $=(x_n-\alpha)(1-\frac{f^{'}(\xi)}{f^{'}(x_0)})$  $\xi \in [min(x_n,\alpha),max(x_n,\alpha)]$\\
   所以可取s=1,C=$(1-\frac{f^{'}(\xi)}{f^{'}(x_0)})$  $\xi \in [min(x_n,\alpha),max(x_n,\alpha)]$\\
@@ -107,10 +107,17 @@
   $\xi_1 \in [min(r,x_n),max(r,x_n)]$\\
   和$f^{'}(x_n)=f^{'}(r)+\sum_{t=1}^{k-2}\frac{f^{(t+1)}(r)}{t!}(x_n-r)^t+\frac{f^{(k)}(\xi_2)}{(k-1)!}(x_n-r)^{k-1}$
   $\xi_2 \in [min(r,x_n),max(r,x_n)]$\\
-  因为$f^{(k)}(r) \neq 0$,所以可取一个极小邻域$\delta$,使得对$x \in [r-\delta,r+\delta], f^{(k)}(x) \neq 0$,且均同号
-  故$x_{n+1}=x_n-k\frac{f(x_n)}{f^{'}(x_n)}=x_n-\frac{\frac{f^{(k)}(\xi_1)}{k!}(x_n-r)^k}{\frac{f^{(k)}(\xi_2)}{(k-1)!}(x_n-r)^{k-1}}$\\
-  $=x_n-k\frac{x_n-r}{k}$\\
-  $|x_{n+1}-r|=|x_n-r|*|1-\frac{f^{(k)}(\xi_1)}{f^{(k)}(\xi_2)}|$\\
+  因为$f^{(k)}(r) \neq 0$,所以可取一个极小邻域$\delta$,使得对$x \in [r-\delta,r+\delta], f^{(k)}(x) \neq 0$,且均同号  \hfill(1)
+  故$x_{n+1}=x_n-k\frac{f(x_n)}{f^{'}(x_n)}=x_n-k\frac{\frac{f^{(k)}(\xi_1)}{k!}(x_n-r)^k}{\frac{f^{(k)}(\xi_2)}{(k-1)!}(x_n-r)^{k-1}}$\\
+  $=x_n-k\frac{x_n-r}{k}\frac{f^{(k)}(\xi_1)}{f^{(k)}(\xi_2)}=x_n-\frac{f^{k}(\xi_1)-f^{k}(\xi_2)+f^{k}(\xi_2)}{f^{k}(\xi_2)}(x_n-r)$\\
+  $=r-\frac{f^{k}(\xi_1)-f^{k}(\xi_2)}{f^{k}(\xi_2)}(x_n-r)$\\
+  $|x_{n+1}-r|=|\frac{f^{k}(\xi_1)-f^{k}(\xi_2)}{f^{k}(\xi_2)}|*|x_n-r|=|\frac{f^{k+1}(\xi_3)}{f^{k}(\xi_2)}|*|x_n-r|*|\xi_1-\xi_2|$\\
+  (由拉格朗日中值定理，$\xi_3 \in [min(\xi_1,\xi_2),max(\xi_1,\xi_2)]$)\\
+  $\leq|\frac{f^{k+1}(\xi_3)}{f^{k}(\xi_2)}|*|x_n-r|^2$(因为$\xi_1,\xi_2 \ in [min(r,x_n),max(r,x_n)]$)\\
+  令M=$\frac{max_{x\in[r-\delta,r+\delta]f^{k+1}(x)}}{min_{x\in[r-\delta,r+\delta]f^{k}(x)}}$，存在性可由(1)得\\
+  再取$\delta_2<\delta$使得$\delta_2*M<1$，令初值在区间$[r-\delta_2,r+\delta_2]$
+  此时满足$|x_{n+1}-r|\leq M*|x_n-r|^2$
+  且$|x_n-r|\leq M^{2^n-1}|x_0-r|^{2^{n}}$
   
 \end{flushleft}
 
