@@ -1,157 +1,163 @@
 \documentclass[a4paper]{article}
 \usepackage[affil-it]{authblk}
 \usepackage[backend=bibtex,style=numeric]{biblatex}
-
+\usepackage{amsmath}
 \usepackage{geometry}
+\usepackage{caption}
 \geometry{margin=1.5cm, vmargin={0pt,1cm}}
 \setlength{\topmargin}{-1cm}
 \setlength{\paperheight}{29.7cm}
 \setlength{\textheight}{25.3cm}
 
-
 \begin{document}
-% =================================================
-\title{Numerical Analysis homework 1}
+% ==================================================
+\title{Numerical Analysis Homework 1}
 
-\author{罗开诚 3220103383
+\author{Kaicheng Luo 3220103383
   \thanks{Electronic address: \texttt{3220103383@zju.edu.com}}}
-\affil{(信息与计算科学2201), Zhejiang University }
-
+\affil{(Information and Computational Science 2201), Zhejiang University}
 
 \date{Due time: \today}
 
 \maketitle
 
 \begin{abstract}
-    chapter
+    This document contains solutions to various numerical analysis problems.
 \end{abstract}
 
-
-
 % ============================================
-
-\section*{I.Consider the bisection method starting with the initial interval [1.5,3.5]. In the following questions “the
- interval” refers to the bisection interval whose width changes across di↵erent loops.\\
- • What is the width of the interval at the nth step?\\
+\section*{I. Consider the bisection method starting with the initial interval [1.5,3.5]. In the following questions, "the interval" refers to the bisection interval whose width changes across different iterations.\\
+ • What is the width of the interval at the \(n_th\) step?\\
  • What is the supremum of the distance between\\
- the root r and the midpoint of the interval?}
+ the root \( r \) and the midpoint of the interval?}
 
 \subsection*{I-a}
-$\frac{1}{2^{n-1}}$
-\subsection*{I-b}
-1
+The width of the interval at the nth step is \( \frac{1}{2^{n-1}} \).
 
-\section*{II. In using the bisection algorithm with its initial interval as $[a_0, b_0]$ with $a_0 > 0$, we want to determine the root with its relative error no greater than $\varepsilon$.
- Prove that this goal of accuracy is guaranteed by the following choice of the number of steps,
+\subsection*{I-b}
+The supremum of the distance between the root \( r \) and the midpoint of the interval is 1.
+
+\section*{II. In using the bisection algorithm with its initial interval as \([a_0, b_0]\) with \(a_0 > 0\), we want to determine the root with its relative error no greater than \(\varepsilon\). Prove that this goal of accuracy is guaranteed by the following choice of the number of steps,
 \[
 n \geq \frac{\log(b_0 - a_0) - \log \varepsilon - \log a_0}{\log 2} - 1.
+\]}
+Define the root as \( r \).\\
+Error: \( \frac{b_0-a_0}{2^{n-1}} \)\\
+The supremum of relative error after \( n \) iterations is \( error = \frac{b_0-a_0}{2^{n-1} \cdot r} \)\\
+Since \( a_0, b_0 > 0 \)\\
+    \( error \in [0, \frac{b_0-a_0}{2^{n-1} \cdot a_0}] \)\\
+Thus, we can obtain an upper bound \( \frac{b_0-a_0}{2^{n-1} \cdot a_0} < \epsilon \)\\
+Hence, we get \( n \geq \frac{\log(b_0-a_0) - \log(\epsilon) - \log(a_0)}{\log 2} - 1 \)
+
+\section*{III. Perform four iterations of Newton's method for the polynomial equation \( p(r) = 4x^3 - 2x^2 + 3 = 0 \) with the starting point \( x_0 = 1 \). Use a hand calculator and organize the results of the iterations in a table.}
+
+\noindent 
+\begin{center}
+    \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        Iterations & 1 & 2 & 3 & 4 \\ \hline
+        \( f'(x) \) & 16 & 11.1719 & 10.2129 & 10.1686 \\ \hline
+        \( x_{n+1} \) & -0.8125 & -0.770804 & -0.768832 & -0.768828 \\ \hline
+    \end{tabular}
+    \captionof{table}{Iterations} 
+\end{center}
+
+\section*{IV. Consider a variation of Newton's method in which only the derivative at \( r_0 \) is used.
+\[
+x_{n+1} = x_n - \frac{f(x_n)}{f'(x_0)}
+\]
+Find \( C \) and \( s \) such that
+\[
+e_{n+1} = C e_n^s,
+\]
+where \( e_n \) is the error of Newton's method at step \( n \), \( s \) is a constant, and \( C \) may depend on \( x_n \), the true solution \( \alpha \), and the derivative of the function \( f \).}
+
+By Lagrange,
+\[
+x_{n+1}-\alpha = x_n-\alpha-\frac{f(x_n)-f(\alpha)}{f^{'}(x_0)} = (x_n-\alpha)\left(1-\frac{f^{'}(\xi)}{f^{'}(x_0)}\right) \quad \xi \in [\min(x_n,\alpha), \max(x_n,\alpha)]
+\]
+Therefore, we can take \( s = 1 \), \( C = \left(1-\frac{f^{'}(\xi)}{f^{'}(x_0)}\right) \) where \( \xi \in [\min(x_n,\alpha), \max(x_n,\alpha)] \)
+
+\section*{V. Within \( (0, \pi/2) \), will the iteration
+\[
+x_{n+1} = \tan^{-1}(x_n)
+\]
+converge?}
+
+Yes, for \( x \in \left(-\frac{\pi}{2}, \frac{\pi}{2}\right) \), if \( x_0 = 0 \), then it remains 0.\\
+If \( x_0 > 0 \), by mathematical induction if \( x_n > 0 \), \( x_{n+1} = \tan^{-1}(x_n) > 0 \), hence \( x_n > 0 \) always holds. The case for \( x_0 < 0 \) is similar.\\
+Here, we take \( x_0 > 0 \) as an example.\\
+\( |x_n| = |\tan(x_{n+1})| > |x_{n+1}| \)\\
+Moreover, since \( x_n > 0 \), the sequence \( \{x_n\} \) is monotonically bounded, and it must converge. Suppose it converges to \( \alpha \).\\
+Taking the limit of \( x_n = \tan(x_{n+1}) \), we get \( \alpha = \tan(\alpha) \), \( \alpha = 0 \).\\
+Therefore, it converges to 0.
+
+\section*{VI. Let \( p > 1 \). What is the value of the following continued fraction?
+\[
+x = \frac{1}{p + \frac{1}{p + \frac{1}{p + \ldots}}}
+\]
+Prove that the sequence of values converges. (Hint: This can be interpreted as \( x = \lim_{n \to \infty} x_n \), where 
+\[
+x_1 = \frac{1}{p}, \quad x_2 = \frac{1}{p + \frac{1}{p}}, \quad x_3 = \frac{1}{p + \frac{1}{p + \frac{1}{p}}}, \quad \ldots
+\]
+Formulate \( x \) as a fixed point of some function.)}
+
+Represent \( x \) using the limit of a sequence.\\
+Let \( x_0 = \frac{1}{p} \)\\
+\( x_{n+1} = \frac{1}{p + x_n} \)\\
+Find the equation satisfied by the fixed point, \( x_n^2 + px_n - 1 = 0 \)\\
+The positive solution is \( \alpha = \frac{-p + \sqrt{p^2 + 4}}{2} \)\\
+\( |x_{n+1} - \alpha| = \left|\frac{1}{p + x_n} - \alpha\right| = \left|\frac{\alpha^2 + p\alpha}{p + x_n} - \alpha\right| = |x_n - \alpha| \cdot \frac{\alpha}{p + x_n} < |x_n - \alpha| \cdot \frac{\alpha}{p} \) (it is easy to know \( x_n > 0 \))\
+\( \frac{\alpha}{p} = \frac{-1 + \sqrt{1 + 4/p^2}}{2} < 1 \)\
+Hence, it converges to \( \alpha \).
+
+\section*{VII. What happens in problem I if \( a \leq 0 < b \)? Derive an inequality of the number of steps similar to that in II. In this case, is the relative error still an appropriate measure?}
+
+Assume the root is \( t \).\\
+The error is \( \frac{b_0 - a_0}{2^{n-1}} \)\\
+A bound for the relative error is \( error = \frac{b_0 - a_0}{2^{n-1} \cdot r} \)\\
+\( \frac{b_0 - a_0}{2^{n-1} \cdot t} < \epsilon \)\\
+Hence, \( n \leq \frac{\log(b_0 - a_0) - \log(\epsilon) - \log(t)}{\log 2} - 1 \)\\
+\textbf{Is it a good measure?}\\
+It is not a good measure, because if the root is in an extremely small neighborhood of 0, even if the absolute error is very small, the relative error can still be very large.
+
+\section*{VIII. Consider solving \( f(x) = 0 \) (where \( f \) has a root of multiplicity \( k \) at \( x_0 \)) by Newton's method with the starting point \( x_0 \) close to a root of multiplicity \( k \). Note that \( \alpha \) is a zero of multiplicity \( k \) of the function \( f \) if
+\[
+f^{(k)}(\alpha) \neq 0; \quad \text{for } i < k, \, f^{(i)}(\alpha) = 0.
+\]
+How can a multiple zero be detected by examining the behavior of the points \( (x_n, f(x_n)) \)?
+\\
+Prove that if \( x \) is a zero of multiplicity \( K \) of the function \( f \), then quadratic convergence in Newton's iteration will be restored by making this modification:
+\[
+x_{n+1} = x_n - \frac{f(x_n)}{f'(x_n)}.
 \]
 }
 
-define root as t.\\
-  error:  $\frac{b_0-a_0}{2^{n-1}}$\\
-  the supremum of relative error after iterate n times  $error=\frac{b_0-a_0}{2^{n-1}*r}$\\
-  as $a_0,b_0>0$\\
-      $error \in [0,\frac{b_0-a_0}{2^{n-1}*a_0}]$\\
-  算了，还是用中文吧.\\
-  所以可以得到一个上界$\frac{b_0-a_0}{2^{n-1}*a_0}<\epsilon$\\
-  得    $n \geq \frac{log(b_0-a_0)-log(\epsilon)-log(a_0)}{log 2}-1$
-
-  \section*{III}
-  \begin{flushleft}
-    \begin{table}[htbp]
-      \centering
-      \caption{iterations}
-      \begin{tabular}{|c|c|c|c|c|}
-      \hline
-      iterations & 1 & 2 & 3 & 4 \\ \hline
-    \( f'(x) \) & 16 & 11.1719 & 10.2129 & 10.1686 \\ \hline
-    \( x_{n+1} \) & -0.8125 & -0.770804 & -0.768832 & -0.768828 \\ \hline
-      \end{tabular}
-    \end{table}
-  \end{flushleft}
-  
-  \section*{IV}
-  \begin{flushleft}
-    由拉格朗日，
-    $x_{n+1}-\alpha=x_n-\alpha-\frac{f(x_n)-f(\alpha)}{f^{'}(x_0)}$\\
-    $=(x_n-\alpha)(1-\frac{f^{'}(\xi)}{f^{'}(x_0)})$  $\xi \in [min(x_n,\alpha),max(x_n,\alpha)]$\\
-    所以可取s=1,C=$(1-\frac{f^{'}(\xi)}{f^{'}(x_0)})$  $\xi \in [min(x_n,\alpha),max(x_n,\alpha)]$\\
-    
-  
-  
-  \end{flushleft}
-  
-  \section*{V}
-  \begin{flushleft}
-    是的喵。
-    有$x \in (-\frac{\pi}{2},\frac{\pi}{2})$时，若$x_0=0$,则直接恒为0。\\
-    若$x_0>0$,由数学归纳法 $若x_n>0,x_{n+1}=tan^{-1}(x_n)>0$,故$x_n>0$恒成立。$x_0<0$时同理
-    这里以$x_0>0$为例。
-    $|x_n|=|tan(x_{n+1})|>|x_{n+1}|$
-    又$x_n>0,{x_n}$单调有界，其必收敛。设其收敛于$\alpha$
-    对$x_n=tan(x_{n+1})$求极限，得$\alpha=tan(\alpha),\alpha=0$
-    故收敛于0.
-  \end{flushleft}
-  
-  \section*{VI}
-  \begin{flushleft}
-    用数列极限的方式表示x。
-    令$x_0=\frac{1}{p}$
-    $x_{n+1}=\frac{1}{p+x_n}$
-    取不动点满足的方程，$x_n^2+px_n-1=0$
-    求得大于0得解为$\alpha=\frac{-p+\sqrt{p^2+4}}{2}$
-    $|x_{n+1}-\alpha|=|\frac{1}{p+x_n}-\alpha|=|\frac{\alpha^2+p\alpha}{p+x_n}-\alpha|=|x_n-\alpha|*\frac{\alpha}{p+x_n}<|x_n-\alpha|*\frac{\alpha}{p}$(易知$x_n>0$)
-    $\frac{\alpha}{p}=\frac{-1+\sqrt{1+4/p^2}}{2}<1$
-    故收敛于$\alpha$。
-  
-  \end{flushleft}
-  
-  \section*{VII}
-  \begin{flushleft}
-    设根为 t.\\
-    误差为  $\frac{b_0-a_0}{2^{n-1}}$\\
-    相对误差的一个上界为  $error=\frac{b_0-a_0}{2^{n-1}*r}$\\
-    $\frac{b_0-a_0}{2^{n-1}*t}<\epsilon$\\
-    得    $n \leq \frac{log(b_0-a_0)-log(\epsilon)-log(t)}{log 2}-1$\\
-    \textbf{是否是一个好的衡量标准：}\\
-    不是一个好的衡量标准，若跟在0的极小邻域内，即使绝对误差很小，相对误差依然很大。
-  \end{flushleft}
-  
-  \section*{VIII}
-  \begin{flushleft}
-  \textbf{$\cdot$\\}  
-    可以考虑从高阶无穷小入手啊。\\
-    计算$\frac{f(x_n+\Delta x)}{(\Delta x)^p}$，令$\Delta x$趋于0的值，若对p=0,1，2，3……k-1均近似为0，p=k时不收敛为0，则为k重零点。\\
-  
-  \textbf{$\cdot$\\}  
-    根为r
-    有$f(x_n)=f(r)+\sum_{t=1}^{k-1}\frac{f^{(t)}(r)}{t!}(x_n-r)^t+\frac{f^{(k)}(\xi_1)}{k!}(x_n-r)^k$\\
-    $\xi_1 \in [min(r,x_n),max(r,x_n)]$\\
-    和$f^{'}(x_n)=f^{'}(r)+\sum_{t=1}^{k-2}\frac{f^{(t+1)}(r)}{t!}(x_n-r)^t+\frac{f^{(k)}(\xi_2)}{(k-1)!}(x_n-r)^{k-1}$
-    $\xi_2 \in [min(r,x_n),max(r,x_n)]$\\
-    因为$f^{(k)}(r) \neq 0$,所以可取一个极小邻域$\delta$,使得对$x \in [r-\delta,r+\delta], f^{(k)}(x) \neq 0$,且均同号  \hfill(1)
-    故$x_{n+1}=x_n-k\frac{f(x_n)}{f^{'}(x_n)}=x_n-k\frac{\frac{f^{(k)}(\xi_1)}{k!}(x_n-r)^k}{\frac{f^{(k)}(\xi_2)}{(k-1)!}(x_n-r)^{k-1}}$\\
-    $=x_n-k\frac{x_n-r}{k}\frac{f^{(k)}(\xi_1)}{f^{(k)}(\xi_2)}=x_n-\frac{f^{k}(\xi_1)-f^{k}(\xi_2)+f^{k}(\xi_2)}{f^{k}(\xi_2)}(x_n-r)$\\
-    $=r-\frac{f^{k}(\xi_1)-f^{k}(\xi_2)}{f^{k}(\xi_2)}(x_n-r)$\\
-    $|x_{n+1}-r|=|\frac{f^{k}(\xi_1)-f^{k}(\xi_2)}{f^{k}(\xi_2)}|*|x_n-r|=|\frac{f^{k+1}(\xi_3)}{f^{k}(\xi_2)}|*|x_n-r|*|\xi_1-\xi_2|$\\
-    (由拉格朗日中值定理，$\xi_3 \in [min(\xi_1,\xi_2),max(\xi_1,\xi_2)]$)\\
-    $\leq|\frac{f^{k+1}(\xi_3)}{f^{k}(\xi_2)}|*|x_n-r|^2$(因为$\xi_1,\xi_2 \ in [min(r,x_n),max(r,x_n)]$)\\
-    令M=$\frac{max_{x\in[r-\delta,r+\delta]f^{k+1}(x)}}{min_{x\in[r-\delta,r+\delta]f^{k}(x)}}$，存在性可由(1)得\\
-    再取$\delta_2<\delta$使得$\delta_2*M<1$，令初值在区间$[r-\delta_2,r+\delta_2]$
-    此时满足$|x_{n+1}-r|\leq M*|x_n-r|^2$
-    且$|x_n-r|\leq M^{2^n-1}|x_0-r|^{2^{n}}$
-    
-  \end{flushleft}
-
-
+\subsection*{VIII-a}
+One could start with higher-order infinitesimal analysis.\\
+Calculate \( \frac{f(x_n + \Delta x)}{(\Delta x)^p} \), and let \( \Delta x \) approach 0. If for \( p = 0, 1, 2, 3, \ldots, k-1 \) it approximates to 0, and for \( p = k \) it does not converge to 0, then it is a \( k \)-fold zero point.\\
+\subsection*{VIII-b}
+The root is \( r \).\\
+There is \(f(x_n) = f(r) + \sum_{t=1}^{k-1} \frac{f^{(t)}(r)}{t!} (x_n - r)^t + \frac{f^{(k)}(\xi_1)}{k!} (x_n - r)^k\)\\
+\( (\xi_1 \in [\min(r, x_n), \max(r, x_n)]) \)\\
+And \(f^{'}(x_n) = f^{'}(r) + \sum_{t=1}^{k-2} \frac{f^{(t+1)}(r)}{t!} (x_n - r)^t + \frac{f^{(k)}(\xi_2)}{(k-1)!} (x_n - r)^{k-1}\)\
+\( (\xi_2 \in [\min(r, x_n), \max(r, x_n)]) \)\\
+Since \(f^{(k)}(r) \neq 0\), one can take an extremely small neighborhood \( \delta \), such that for \( x \in [r - \delta, r + \delta] \), \(f^{(k)}(x) \neq 0 \), and is of the same sign \hfill(1)\\
+Hence, \( x_{n+1} = x_n - k \frac{f(x_n)}{f^{'}(x_n)} = x_n - k \frac{\frac{f^{(k)}(\xi_1)}{k!} (x_n - r)^k}{\frac{f^{(k)}(\xi_2)}{(k-1)!} (x_n - r)^{k-1}} \)\\
+\( = x_n - k \frac{x_n - r}{k} \frac{f^{(k)}(\xi_1)}{f^{(k)}(\xi_2)} = x_n - \frac{f^{k}(\xi_1) - f^{k}(\xi_2) + f^{k}(\xi_2)}{f^{k}(\xi_2)} (x_n - r) \)\\
+\( = r - \frac{f^{k}(\xi_1) - f^{k}(\xi_2)}{f^{k}(\xi_2)} (x_n - r) \)\\
+\( |x_{n+1} - r| = \left|\frac{f^{k}(\xi_1) - f^{k}(\xi_2)}{f^{k}(\xi_2)}\right| |x_n - r| = \left|\frac{f^{k+1}(\xi_3)}{f^{k}(\xi_2)}\right| |x_n - r| |\xi_1 - \xi_2| \)\\
+(From the mean value theorem, \( \xi_3 \in [\min(\xi_1, \xi_2), \max(\xi_1, \xi_2)] \))\
+\( \leq \left|\frac{f^{k+1}(\xi_3)}{f^{k}(\xi_2)}\right| |x_n - r|^2 \) (since \( \xi_1, \xi_2 \ in [\min(r, x_n), \max(r, x_n)] \))\
+Let \( M = \frac{\max_{x \in [r - \delta, r + \delta]} |f^{k+1}(x)|}{\min_{x \in [r - \delta, r + \delta]} |f^{k}(x)|} \), existence can be obtained from (1)\\
+Then take \( \delta_2 < \delta \) such that \( \delta_2 \cdot M < 1 \), and let the initial value be in the interval \( [r - \delta_2, r + \delta_2] \).\\
+At this point, it satisfies \( |x_{n+1} - r| \leq M \cdot |x_n - r|^2 \) and \( |x_n - r| \leq M^{2^n - 1} |x_0 - r|^{2^n} \)
 
 \section*{ \center{\normalsize {Acknowledgement}} }
-Give your acknowledgements here(if any).
+Use GPT-4 for quick template transformation, and use Kimi AI to correct English grammar.
 
 
-\printbibliography
 
-If you are not familiar with \texttt{bibtex}, 
-it is acceptable to put a table here for your references.
 \end{document}
+
+
