@@ -1,8 +1,7 @@
 #include<iostream>
 #include"EquationSolver.hpp"
-#include"Function.hpp"
 #include<cmath>
-#define pi 3.1415926535
+#define pi 3.1415926535;
 using namespace std;
 
 
@@ -14,5 +13,5 @@ double f1(double x){
 
 int main(){
     Function Function1=Function(&f1);
-    cout<<bisection_method(Function1,0,pi/2,1e-3,1e-4,200).solve();
+    cout<<bisection_method(Function1,0,1.57,1e-3,1e-4,100).solve();
 }
