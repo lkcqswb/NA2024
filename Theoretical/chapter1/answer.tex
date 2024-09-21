@@ -35,18 +35,20 @@
 The width of the interval at the nth step is \( \frac{1}{2^{n-1}} \).
 
 \subsection*{I-b}
-The supremum of the distance between the root \( r \) and the midpoint of the interval is 1.
+After nth step,it's \(\frac{1}{2^n}\).
+Throughout the entire program process.,it's 1.
+ 
 
 \section*{II. In using the bisection algorithm with its initial interval as \([a_0, b_0]\) with \(a_0 > 0\), we want to determine the root with its relative error no greater than \(\varepsilon\). Prove that this goal of accuracy is guaranteed by the following choice of the number of steps,
 \[
 n \geq \frac{\log(b_0 - a_0) - \log \varepsilon - \log a_0}{\log 2} - 1.
 \]}
 Define the root as \( r \).\\
-Error: \( \frac{b_0-a_0}{2^{n-1}} \)\\
-The supremum of relative error after \( n \) iterations is \( error = \frac{b_0-a_0}{2^{n-1} \cdot r} \)\\
+Error is less than \( \frac{b_0-a_0}{2^{n+1}} \)\\
+The supremum of relative error after \( n \) iterations is \( error = \frac{b_0-a_0}{2^{n+1} \cdot r} \)\\
 Since \( a_0, b_0 > 0 \)\\
-    \( error \in [0, \frac{b_0-a_0}{2^{n-1} \cdot a_0}] \)\\
-Thus, we can obtain an upper bound \( \frac{b_0-a_0}{2^{n-1} \cdot a_0} < \epsilon \)\\
+    \( error \in [0, \frac{b_0-a_0}{2^{n+1} \cdot a_0}] \)\\
+Thus, we can obtain an upper bound \( \frac{b_0-a_0}{2^{n+1} \cdot a_0} < \epsilon \)\\
 Hence, we get \( n \geq \frac{\log(b_0-a_0) - \log(\epsilon) - \log(a_0)}{\log 2} - 1 \)
 
 \section*{III. Perform four iterations of Newton's method for the polynomial equation \( p(r) = 4x^3 - 2x^2 + 3 = 0 \) with the starting point \( x_0 = 1 \). Use a hand calculator and organize the results of the iterations in a table.}
@@ -71,7 +73,16 @@ Find \( C \) and \( s \) such that
 e_{n+1} = C e_n^s,
 \]
 where \( e_n \) is the error of Newton's method at step \( n \), \( s \) is a constant, and \( C \) may depend on \( x_n \), the true solution \( \alpha \), and the derivative of the function \( f \).}
-
+define \alpha as the root\\
+\(x_n=f(\alpha)+(x_n-\alpha)*f^{'}(\alpha)+(x_n-\alpha)^2*\frac{f^{''}(\xi)}{2!} \xi \in [min(x_n,\alpha),max(x_n,\alpha)]\)\\
+take it to the equation above\\
+\(x_{n+1}-\alpha=x_n-\alpha-\frac{f(\alpha)+(x_n-\alpha)*f^{'}(\alpha)+(x_n-\alpha)^2*\frac{f^{''}(\xi)}{2!}}{f^{'}(x_0)}\)\\
+\(f(\alpha)=0  so e_{n+1}=e_n-\frac{e_n*f^{'}(\alpha)+e_n^2*\frac{f^{''}(\xi)}{2!}}{f^{'}(x_0)}\)\\
+if \(f^{'}(x_0)=f^{'}(x_{\alpha}) \)(the equation will remain during the iteration) \\
+we have\(e_{n+1}=-\frac{e_n^2*f^{''}(\xi)}{2*f^{'}(x_0)}\)
+C=\(-\frac{f^{''}(\xi)}{2*f^{'}(x_0)}\)
+s=2
+and if \(f^{'}(x_0) \neq f^{'}(x_{\alpha}) \)
 By Lagrange,
 \[
 x_{n+1}-\alpha = x_n-\alpha-\frac{f(x_n)-f(\alpha)}{f^{'}(x_0)} = (x_n-\alpha)\left(1-\frac{f^{'}(\xi)}{f^{'}(x_0)}\right) \quad \xi \in [\min(x_n,\alpha), \max(x_n,\alpha)]
@@ -113,13 +124,16 @@ Hence, it converges to \( \alpha \).
 
 \section*{VII. What happens in problem I if \( a \leq 0 < b \)? Derive an inequality of the number of steps similar to that in II. In this case, is the relative error still an appropriate measure?}
 
-Assume the root is \( t \).\\
-The error is \( \frac{b_0 - a_0}{2^{n-1}} \)\\
-A bound for the relative error is \( error = \frac{b_0 - a_0}{2^{n-1} \cdot r} \)\\
-\( \frac{b_0 - a_0}{2^{n-1} \cdot t} < \epsilon \)\\
-Hence, \( n \leq \frac{\log(b_0 - a_0) - \log(\epsilon) - \log(t)}{\log 2} - 1 \)\\
-\textbf{Is it a good measure?}\\
-It is not a good measure, because if the root is in an extremely small neighborhood of 0, even if the absolute error is very small, the relative error can still be very large.
+If the root is in an extremely small neighborhood of 0, even if the absolute error is very small, the relative error can still be very large.
+We consider the absolute error for estimation.
+Define the root as \( r \).
+The error is less than \( \frac{b_0-a_0}{2^{n+1}} \).
+The supremum of the absolute error after \( n \) iterations is \( error = \frac{b_0-a_0}{2^{n+1}} \).
+Thus, we can obtain an upper bound \( \frac{b_0-a_0}{2^{n+1}} < \epsilon \).
+Hence, we get \( n \geq \frac{\log(b_0-a_0) - \log(\epsilon)}{\log 2} - 1 \).
+\textbf{Is it a good measure?}
+Considering this situation (if the root is in an extremely small neighborhood of 0, even if the absolute error is very small, the relative error can still be very large).
+This is not a good estimate.
 
 \section*{VIII. Consider solving \( f(x) = 0 \) (where \( f \) has a root of multiplicity \( k \) at \( x_0 \)) by Newton's method with the starting point \( x_0 \) close to a root of multiplicity \( k \). Note that \( \alpha \) is a zero of multiplicity \( k \) of the function \( f \) if
 \[
@@ -135,7 +149,7 @@ x_{n+1} = x_n - \frac{f(x_n)}{f'(x_n)}.
 
 \subsection*{VIII-a}
 One could start with higher-order infinitesimal analysis.\\
-Calculate \( \frac{f(x_n + \Delta x)}{(\Delta x)^p} \), and let \( \Delta x \) approach 0. If for \( p = 0, 1, 2, 3, \ldots, k-1 \) it approximates to 0, and for \( p = k \) it does not converge to 0, then it is a \( k \)-fold zero point.\\
+Calculate \( \frac{f(x_n + \Delta x)-f(x_n)}{(\Delta x)^p} \), and let \( \Delta x \) approach 0. If for \( p = 0, 1, 2, 3, \ldots, k-1 \) it approximates to 0, and for \( p = k \) it does not converge to 0, then it is a \( k \)-fold zero point.\\
 \subsection*{VIII-b}
 The root is \( r \).\\
 There is \(f(x_n) = f(r) + \sum_{t=1}^{k-1} \frac{f^{(t)}(r)}{t!} (x_n - r)^t + \frac{f^{(k)}(\xi_1)}{k!} (x_n - r)^k\)\\
@@ -155,7 +169,6 @@ At this point, it satisfies \( |x_{n+1} - r| \leq M \cdot |x_n - r|^2 \) and \( 
 
 \section*{ \center{\normalsize {Acknowledgement}} }
 Use GPT-4 for quick template transformation, and use Kimi AI to correct English grammar.
-
 
 
 \end{document}
