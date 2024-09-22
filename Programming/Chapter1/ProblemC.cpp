@@ -7,5 +7,5 @@ double func(double x){
 
 int main(){
     Function Function1(func);
-    cout<<Newton_method(Function1,4.6,1e-3,10).solve();
+    cout<<Newton_method(Function1,4.6,1e-3,10).solve()<<endl;
 }

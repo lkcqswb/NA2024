@@ -1,28 +1,34 @@
-
 CXX = g++
-
-
 CXXFLAGS = -std=c++11 -Wall
-
-
 TARGETS = ProblemB ProblemC ProblemD ProblemE ProblemF
 
+.PHONY: all compile run report clean
 
-report:report.pdf
+all: compile
 
+compile: $(TARGETS)
 
-%: %.cpp
+$(TARGETS): %: %.cpp
 	$(CXX) $(CXXFLAGS) $< -o $@
 
-run:$(TARGETS)
+run: compile
+	@for target in $(TARGETS); do \
+		./$$target; \
+	done
+
+run_test:
+	@for target in $(TARGETS); do \
+		echo "Running $$target..."; \
+		./$$target > $$target.txt; \
+	done
+
+report: compile run_test report.pdf clean
 
 report.pdf: report.tex
-	@pdflatex $report.tex
-	@bibtex main
-	@pdflatex $report.tex
-	@pdflatex $report.tex
-
+	@pdflatex report.tex
+	@bibtex report
+	@pdflatex report.tex
+	@pdflatex report.tex
 
 clean:
-	rm -f $(TARGETS) report.tex report.aux report.log report.pdf
-
+	rm -f $(TARGETS) report.aux report.log report.bbl report.blg report-blx.bib report.run.xml ProblemB ProblemC ProblemD ProblemE ProblemF ProblemB.txt ProblemC.txt ProblemD.txt ProblemE.txt ProblemF.txt
