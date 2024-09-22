@@ -1,8 +1,7 @@
 #include<iostream>
 #include<cmath>
 #include"EquationSolver.hpp"
-#define pi 3.1415926535
-#define M_e 2.71828
+
 using namespace std;
 double f1(double x){
     return sin(x/2)-1;

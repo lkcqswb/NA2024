@@ -1,4 +1,5 @@
-#include<iostream>
+#define pi 3.1415926535
+#define M_e 2.71828
 class Function{
 private:
     double (*function)(double);

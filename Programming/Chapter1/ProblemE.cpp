@@ -1,7 +1,6 @@
 #include<iostream>
 #include<cmath>
 #include"EquationSolver.hpp"
-#define pi 3.1415926535
 double L=10,r=1,V=12.4;
 
 double volumn(double h){

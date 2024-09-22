@@ -1,8 +1,6 @@
 #include<iostream>
 #include"EquationSolver.hpp"
 #include<cmath>
-#define pi 3.1415926535
-#define M_e 2.71828
 using namespace std;
 
 
