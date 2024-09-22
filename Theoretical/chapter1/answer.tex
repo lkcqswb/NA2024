@@ -22,7 +22,7 @@
 \maketitle
 
 \begin{abstract}
-    This document contains solutions to various numerical analysis problems.
+    Solutions to various numerical analysis problems.
 \end{abstract}
 
 % ============================================
@@ -73,17 +73,19 @@ Find \( C \) and \( s \) such that
 e_{n+1} = C e_n^s,
 \]
 where \( e_n \) is the error of Newton's method at step \( n \), \( s \) is a constant, and \( C \) may depend on \( x_n \), the true solution \( \alpha \), and the derivative of the function \( f \).}
-define \alpha as the root\\
-\(x_n=f(\alpha)+(x_n-\alpha)*f^{'}(\alpha)+(x_n-\alpha)^2*\frac{f^{''}(\xi)}{2!} \xi \in [min(x_n,\alpha),max(x_n,\alpha)]\)\\
+
+define \(\alpha\) as the root\\
+\(x_n=f(\alpha)+(x_n-\alpha)*f^{'}(\alpha)+(x_n-\alpha)^2*\frac{f^{''}(\xi)}{2!}  \xi \in [min(x_n,\alpha),max(x_n,\alpha)]\)\\
 take it to the equation above\\
 \(x_{n+1}-\alpha=x_n-\alpha-\frac{f(\alpha)+(x_n-\alpha)*f^{'}(\alpha)+(x_n-\alpha)^2*\frac{f^{''}(\xi)}{2!}}{f^{'}(x_0)}\)\\
-\(f(\alpha)=0  so e_{n+1}=e_n-\frac{e_n*f^{'}(\alpha)+e_n^2*\frac{f^{''}(\xi)}{2!}}{f^{'}(x_0)}\)\\
-if \(f^{'}(x_0)=f^{'}(x_{\alpha}) \)(the equation will remain during the iteration) \\
-we have\(e_{n+1}=-\frac{e_n^2*f^{''}(\xi)}{2*f^{'}(x_0)}\)
-C=\(-\frac{f^{''}(\xi)}{2*f^{'}(x_0)}\)
-s=2
-and if \(f^{'}(x_0) \neq f^{'}(x_{\alpha}) \)
-By Lagrange,
+\(f(\alpha)=0\)   so  \(e_{n+1}=e_n-\frac{e_n*f^{'}(\alpha)+e_n^2*\frac{f^{''}(\xi)}{2!}}{f^{'}(x_0)}\)\\
+if \(f^{'}(x_0)=f^{'}(x_{\alpha}) \)(This equation holds true throughout the iterative process.) \\
+we have\\
+\(e_{n+1}=-\frac{e_n^2*f^{''}(\xi)}{2*f^{'}(x_0)}\)\\
+C=\(-\frac{f^{''}(\xi)}{2*f^{'}(x_0)}\)  s=2\\
+and if \(f^{'}(x_0) \neq f^{'}(x_{\alpha}) \)\\
+The first-order term of $e_n$ cannot be neglected.
+By Lagrange,\\
 \[
 x_{n+1}-\alpha = x_n-\alpha-\frac{f(x_n)-f(\alpha)}{f^{'}(x_0)} = (x_n-\alpha)\left(1-\frac{f^{'}(\xi)}{f^{'}(x_0)}\right) \quad \xi \in [\min(x_n,\alpha), \max(x_n,\alpha)]
 \]
@@ -118,19 +120,20 @@ Let \( x_0 = \frac{1}{p} \)\\
 \( x_{n+1} = \frac{1}{p + x_n} \)\\
 Find the equation satisfied by the fixed point, \( x_n^2 + px_n - 1 = 0 \)\\
 The positive solution is \( \alpha = \frac{-p + \sqrt{p^2 + 4}}{2} \)\\
-\( |x_{n+1} - \alpha| = \left|\frac{1}{p + x_n} - \alpha\right| = \left|\frac{\alpha^2 + p\alpha}{p + x_n} - \alpha\right| = |x_n - \alpha| \cdot \frac{\alpha}{p + x_n} < |x_n - \alpha| \cdot \frac{\alpha}{p} \) (it is easy to know \( x_n > 0 \))\
-\( \frac{\alpha}{p} = \frac{-1 + \sqrt{1 + 4/p^2}}{2} < 1 \)\
+\( |x_{n+1} - \alpha| = \left|\frac{1}{p + x_n} - \alpha\right| = \left|\frac{\alpha^2 + p\alpha}{p + x_n} - \alpha\right| = |x_n - \alpha| \cdot \frac{\alpha}{p + x_n} < |x_n - \alpha| \cdot \frac{\alpha}{p} \) (it is easy to know \( x_n > 0 \))\\
+\( \frac{\alpha}{p} = \frac{-1 + \sqrt{1 + 4/p^2}}{2} < 1 \)\\
+\( |x_{n+1} - \alpha| \lt |\frac{1}{p + x_0}|*\frac{\alpha^n}{p^n} \) the latter tends to zero
 Hence, it converges to \( \alpha \).
 
 \section*{VII. What happens in problem I if \( a \leq 0 < b \)? Derive an inequality of the number of steps similar to that in II. In this case, is the relative error still an appropriate measure?}
 
 If the root is in an extremely small neighborhood of 0, even if the absolute error is very small, the relative error can still be very large.
-We consider the absolute error for estimation.
-Define the root as \( r \).
-The error is less than \( \frac{b_0-a_0}{2^{n+1}} \).
-The supremum of the absolute error after \( n \) iterations is \( error = \frac{b_0-a_0}{2^{n+1}} \).
-Thus, we can obtain an upper bound \( \frac{b_0-a_0}{2^{n+1}} < \epsilon \).
-Hence, we get \( n \geq \frac{\log(b_0-a_0) - \log(\epsilon)}{\log 2} - 1 \).
+We consider the absolute error for estimation.\\
+Define the root as \( r \).\\
+The error is less than \( \frac{b_0-a_0}{2^{n+1}} \).\\
+The supremum of the absolute error after \( n \) iterations is \( error = \frac{b_0-a_0}{2^{n+1}} \).\\
+Thus, we can obtain an upper bound \( \frac{b_0-a_0}{2^{n+1}} < \epsilon \).\\
+Hence, we get \( n \geq \frac{\log(b_0-a_0) - \log(\epsilon)}{\log 2} - 1 \).\\
 \textbf{Is it a good measure?}
 Considering this situation (if the root is in an extremely small neighborhood of 0, even if the absolute error is very small, the relative error can still be very large).
 This is not a good estimate.
@@ -149,7 +152,7 @@ x_{n+1} = x_n - \frac{f(x_n)}{f'(x_n)}.
 
 \subsection*{VIII-a}
 One could start with higher-order infinitesimal analysis.\\
-Calculate \( \frac{f(x_n + \Delta x)-f(x_n)}{(\Delta x)^p} \), and let \( \Delta x \) approach 0. If for \( p = 0, 1, 2, 3, \ldots, k-1 \) it approximates to 0, and for \( p = k \) it does not converge to 0, then it is a \( k \)-fold zero point.\\
+Calculate \( \frac{f(x_n + \Delta x)-f(x_n)}{(\Delta x)^p} \), and let \( \Delta x \) approach 0. If \(f(x_n)=0\) and for \( p = 1, 2, 3, \ldots, k-1 \) it approximates to 0, and for \( p = k \) it does not converge to 0, then it is a \( k \)-fold zero point.\\
 \subsection*{VIII-b}
 The root is \( r \).\\
 There is \(f(x_n) = f(r) + \sum_{t=1}^{k-1} \frac{f^{(t)}(r)}{t!} (x_n - r)^t + \frac{f^{(k)}(\xi_1)}{k!} (x_n - r)^k\)\\
@@ -160,8 +163,7 @@ Since \(f^{(k)}(r) \neq 0\), one can take an extremely small neighborhood \( \de
 Hence, \( x_{n+1} = x_n - k \frac{f(x_n)}{f^{'}(x_n)} = x_n - k \frac{\frac{f^{(k)}(\xi_1)}{k!} (x_n - r)^k}{\frac{f^{(k)}(\xi_2)}{(k-1)!} (x_n - r)^{k-1}} \)\\
 \( = x_n - k \frac{x_n - r}{k} \frac{f^{(k)}(\xi_1)}{f^{(k)}(\xi_2)} = x_n - \frac{f^{k}(\xi_1) - f^{k}(\xi_2) + f^{k}(\xi_2)}{f^{k}(\xi_2)} (x_n - r) \)\\
 \( = r - \frac{f^{k}(\xi_1) - f^{k}(\xi_2)}{f^{k}(\xi_2)} (x_n - r) \)\\
-\( |x_{n+1} - r| = \left|\frac{f^{k}(\xi_1) - f^{k}(\xi_2)}{f^{k}(\xi_2)}\right| |x_n - r| = \left|\frac{f^{k+1}(\xi_3)}{f^{k}(\xi_2)}\right| |x_n - r| |\xi_1 - \xi_2| \)\\
-(From the mean value theorem, \( \xi_3 \in [\min(\xi_1, \xi_2), \max(\xi_1, \xi_2)] \))\
+\( |x_{n+1} - r| = \left|\frac{f^{k}(\xi_1) - f^{k}(\xi_2)}{f^{k}(\xi_2)}\right| |x_n - r| = \left|\frac{f^{k+1}(\xi_3)}{f^{k}(\xi_2)}\right| |x_n - r| |\xi_1 - \xi_2| \)(From the mean value theorem, \( \xi_3 \in [\min(\xi_1, \xi_2), \max(\xi_1, \xi_2)] \))\\
 \( \leq \left|\frac{f^{k+1}(\xi_3)}{f^{k}(\xi_2)}\right| |x_n - r|^2 \) (since \( \xi_1, \xi_2 \ in [\min(r, x_n), \max(r, x_n)] \))\
 Let \( M = \frac{\max_{x \in [r - \delta, r + \delta]} |f^{k+1}(x)|}{\min_{x \in [r - \delta, r + \delta]} |f^{k}(x)|} \), existence can be obtained from (1)\\
 Then take \( \delta_2 < \delta \) such that \( \delta_2 \cdot M < 1 \), and let the initial value be in the interval \( [r - \delta_2, r + \delta_2] \).\\
