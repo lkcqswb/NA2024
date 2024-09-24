@@ -39,6 +39,18 @@
   I.(a) design an abstract base class EquationSolver with
 a pure virtual method solve,\\
 (b) write a derived class of EquationSolver for each method to accommodate its particularities in the contract of solving nonlinear equations.\\}
+\\
+\\
+Inspired by the reference functions in the problem-solving class, first design a `Function.hpp` as a struct for a function that can return the function value and its derivative value (the function value is calculated by taking the minimum value eps to compute $\frac{f(x+eps)-f(x)}{eps}$), currently adopting eps=1e-6.\\
+Then design a base class `EquationSolver`, which contains only a reference to a `Function`. Construct the constructor of `EquationSolver` and a pure virtual function `solve`.\\
+On the basis of inheriting `EquationSolver`, the `bisection_method` class has the elements of the two endpoints a and b, epsilon (exit when the absolute value of the function value is less than epsilon), delta (exit when the difference between the root and the current solution is less than delta); the maximum number of iterations: max_iteration;\\
+The `bisection_method` continuously bisects the interval to determine the position of the solution.\\
+The `Newton_method` also inherits from the base class, and when initializing, it passes in the function object f, the initial guess value x_0, the precision epsilon, and the maximum number of iterations max_iteration. In the `solve` function, the Newton method's iterative formula is used for iteration until the precision requirement is met or the maximum number of iterations is reached.\\
+Considering the risk of the denominator being 0 as a derivative, if the absolute value of the derivative value is less than a very small number (to avoid division by zero), the iteration will terminate.\\
+The `Secant_method` needs to pass in the function object f, two initial guess values x_0 and x_1, precision epsilon, the tolerance of the difference between the roots delta, and the maximum number of iterations max_iteration when initializing. In the `solve` function, the secant method's iterative formula is used for iteration until the precision requirement is met or the maximum number of iterations is reached.\\
+When the absolute value of the new approximate value of the function value is less than epsilon, or the difference between the new and old approximate values is less than delta, or the absolute value of the derivative approximate value (that is, the secant slope) is less than a very small number (to avoid division by zero), the iteration terminates.\\
+
+
 
 \section*{ Test your implementation of the bisection method on the
 following functions and intervals}
@@ -49,11 +61,16 @@ following functions and intervals}
   \item $-2^{-x} + e^x + 2\cos x - 6$ on $[1,3]$,
   \item $-\left(\frac{x^{3} + 4 x^{2} + 3 x + 5}{2 x^{3} - 9 x^{2} + 18 x - 2}\right)$ on $[0,4]$.
 \end{itemize}
-
+Considering the case where the function value does not exist, modifications are made to the function value at certain points to ensure that the results are not affected\\
+\begin{verbatim}
 \input{ProblemB.txt}
+\end{verbatim}
 
 \section*{Test your implementation of Newton's method by solving $x = \tan x$ Find the roots near 4.5 and 7.7.}
+
+\begin{verbatim}
 \input{ProblemC.txt}
+\end{verbatim}
 
 \section*{Test your implementation of the secant method by the following functions and initial values:
 \begin{itemize}
@@ -62,14 +79,21 @@ following functions and intervals}
     \item $x^3 - 12x^2 + 3x + 1$ with $x_0 = 0, x_1 = -0.5$.
 \end{itemize}
 You should play with other initial values and (if you get different results) think about the reasons.}
+
+\begin{verbatim}
 \input{ProblemD.txt}
+\end{verbatim}
 
 \section*{A trough of length $L$ has a cross section in the shape of a semi-circle with radius $r$. When filled to within a distance $h$ of the top, the water has the volume
 \[
 V = L\left[0.5\pi r^{2} - r^{2}\arcsin\frac{h}{r} - h\left(r^{2} - h^{2}\right)^{\frac{1}{2}}\right].
 \]
 Suppose $L = 10 \text{ft}$, $r = 1 \text{ft}$, and $V = 12.4 \text{ft}^3$. Find the depth of water in the trough to within $0.01 \text{ft}$ by each of the three implementations in A.}
+
+\begin{verbatim}
 \input{ProblemE.txt}
+\end{verbatim}
+
 
 \section*{In the design of all-terrain vehicles, it is necessary to consider the failure of the vehicle when attempting to negotiate two types of obstacles. One type of failure is called hang-up failure and occurs when the vehicle attempts to cross an obstacle that causes the bottom of the vehicle to touch the ground. The other type of failure is called nose-in failure and occurs when the vehicle descends into a ditch and its nose touches the ground.\\
 The above figure shows the components associated with the nose-in failure of a vehicle. The maximum angle $\alpha$ that can be negotiated by a vehicle when $\beta$ is the maximum angle at which hang-up failure does not occur satisfies the equation}
@@ -91,7 +115,9 @@ E &= (h + 0.5 D)\cos\beta_1 - 0.5 D.
 
 (c) Use the secant method (with another initial value as far away as possible from $33^{\circ}$) to find $\alpha$. Show that you get a different result if the initial value is too far away from $33^{\circ}$; discuss the reasons.
 
+\begin{verbatim}
 \input{ProblemF.txt}
+\end{verbatim}
 
 \section*{ \center{\normalsize {Acknowledgement}} }
 Use GPT-4 for quick template transformation, and use Kimi AI to correct English grammar.

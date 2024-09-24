@@ -44,17 +44,25 @@ double equation(double alpha){
 
 
 int main() {
+    cout<<"Problem F"<<endl;
     Function func(&equation);
     cout<<"F-a"<<endl;
-    cout << Newton_method(func, 45, 1e-3, 200).solve() << endl;
+    cout <<"alpha:"<<Newton_method(func, 45, 1e-3, 200).solve() << endl;
 
     cout<<"F-b"<<endl;
     solver1.reset_param(89, 49, 30, 11.5);
-    cout << Newton_method(func, 33, 1e-3, 200).solve() << endl;
+    cout <<"alpha:"<< Newton_method(func, 33, 1e-3, 200).solve() << endl;
 
 
     cout<<"F-c"<<endl;
     //solver1.reset_param(89, 49, 55, 11.5);
-    cout << Secant_method(func, 10, 70, 1e-3,1e-3,200).solve() << endl;
+    double inital_value[6]={10,70,80,87,150,140};
+    for (int i = 0; i < 6; i+=2)
+    {
+        cout<<"using initial value:"<<"alpha_1:"<<inital_value[i]<<" alpha_2:"<<inital_value[i+1]<<endl;
+        cout << Secant_method(func, inital_value[i], inital_value[i+1], 1e-3,1e-3,200).solve() << endl;
+    }
+    
+    
     return 0;
 }

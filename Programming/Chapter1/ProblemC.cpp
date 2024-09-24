@@ -6,6 +6,7 @@ double func(double x){
 }
 
 int main(){
+    cout<<"Problem C"<<endl;
     Function Function1(func);
-    cout<<Newton_method(Function1,4.6,1e-3,10).solve()<<endl;
+    cout<<"root of x-tan(x) with initial value 4.6"<<Newton_method(Function1,4.6,1e-3,10).solve()<<endl;
 }

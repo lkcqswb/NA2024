@@ -10,7 +10,8 @@ double volumn(double h){
 
 int main(){
     Function Vol(&volumn);
-    cout<<bisection_method(Vol,0,r,1e-2,1e-2,200).solve()<<endl;
-    cout<<Newton_method(Vol,0.5*r,1e-2,200).solve()<<endl;
-    cout<<Secant_method(Vol,0,r,1e-2,1e-2,200).solve()<<endl;
+    cout<<"Problem E"<<endl;
+    cout<<"using bisection method"<<bisection_method(Vol,0,r,1e-3,1e-2,400).solve()<<endl;
+    cout<<"using Newton method"<<Newton_method(Vol,0.5*r,1e-2,400).solve()<<endl;
+    cout<<"using secant method"<<Secant_method(Vol,0,r,1e-3,1e-2,400).solve()<<endl;
 }
