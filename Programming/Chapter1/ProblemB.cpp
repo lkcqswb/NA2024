@@ -34,5 +34,10 @@ int main(){
     cout<<"root of 2^-x+e^x+2*cos(x)-6 on [1,3]: "<<bisection_method(Function3,1,3,1e-4,1e-3,100).solve()<<endl;
     cout<<"root of (x^3+4*x^2+3*x+5)/(2*x^3-9*x^2+18*x-2):"<<endl;
     cout<<"If direct use of the bisection method is employed, the answer is: "<<bisection_method(Function4,0,4,1e-4,1e-3,100).solve()<<endl;
-    cout<<"However, it is noted that the denominator has a zero point within the interval, and the derivative of the denominator is greater than 0, with the denominator having different signs on either side of the zero point. Meanwhile, the numerator is always greater than 0 within the interval, so the solution obtained is actually the root of the denominator, while the equation itself has no roots."<<endl;
+    cout<<"However, it is noted that the denominator has a zero point within the interval, "<<endl;
+    cout<<"and the derivative of the denominator is greater than 0, "<<endl;
+    cout<<"with the denominator having different signs on either side of the zero point. "<<endl;
+    cout<<"Meanwhile, the numerator is always greater than 0 within the interval, "<<endl;
+    cout<<"so the solution obtained is actually the root of the denominator."<<endl;
+    cout<<"The equation itself has no roots."<<endl;
 }

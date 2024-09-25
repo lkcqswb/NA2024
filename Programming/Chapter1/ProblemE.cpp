@@ -11,7 +11,7 @@ double volumn(double h){
 int main(){
     Function Vol(&volumn);
     cout<<"Problem E"<<endl;
-    cout<<"using bisection method"<<bisection_method(Vol,0,r,1e-3,1e-2,400).solve()<<endl;
-    cout<<"using Newton method"<<Newton_method(Vol,0.5*r,1e-2,400).solve()<<endl;
-    cout<<"using secant method"<<Secant_method(Vol,0,r,1e-3,1e-2,400).solve()<<endl;
+    cout<<"using bisection method: "<<bisection_method(Vol,0,r,1e-3,1e-2,400).solve()<<endl;
+    cout<<"using Newton method: "<<Newton_method(Vol,0.5*r,1e-2,400).solve()<<endl;
+    cout<<"using secant method: "<<Secant_method(Vol,0,r,1e-3,1e-2,400).solve()<<endl;
 }

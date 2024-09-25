@@ -59,8 +59,8 @@ int main() {
     double inital_value[6]={10,70,80,87,150,140};
     for (int i = 0; i < 6; i+=2)
     {
-        cout<<"using initial value:"<<"alpha_1:"<<inital_value[i]<<" alpha_2:"<<inital_value[i+1]<<endl;
-        cout << Secant_method(func, inital_value[i], inital_value[i+1], 1e-3,1e-3,200).solve() << endl;
+        cout<<"using initial value:"<<"alpha_1="<<inital_value[i]<<" alpha_2="<<inital_value[i+1]<<endl;
+        cout <<"alpha="<< Secant_method(func, inital_value[i], inital_value[i+1], 1e-3,1e-3,200).solve() << endl;
     }
     
     
