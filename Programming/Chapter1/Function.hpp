@@ -10,7 +10,7 @@ public:
         return function(x);
     }
     double differential(double x) const{
-        return (function(x+eps)-function(x))/eps;
+        return (function(x+eps)-function(x-eps))/(2*eps);
     }
 
 };
