@@ -1,0 +1,299 @@
+\documentclass[a4paper]{article}
+%\usepackage[affil-it]{authblk}
+\usepackage[backend=bibtex,style=numeric]{biblatex}
+\usepackage{amsmath}
+\usepackage{geometry}
+\usepackage{caption}
+\usepackage{amssymb}
+\usepackage{ctex}
+\geometry{margin=1.5cm, vmargin={0pt,1cm}}
+\setlength{\topmargin}{-1cm}
+\setlength{\paperheight}{29.7cm}
+\setlength{\textheight}{25.3cm}
+
+\begin{document}
+% ==================================================
+\title{Numerical Analysis Homework 1}
+
+\author{罗开诚 Luo Kaicheng 3220103383
+  \thanks{Electronic address: \texttt{3220103383@zju.edu.com}}}
+%\affil{(Information and Computational Science 2201), Zhejiang University}
+
+\date{Due time: \today}
+
+\maketitle
+
+\begin{abstract}
+    Solutions to various numerical analysis problems.
+\end{abstract}
+
+% ============================================
+\section*{I}
+1.We have $f(x_0)=1,f(x_1)=1/2$,using interpolation method we got $p_1(f;x)=-\frac{1}{2}x+\frac{3}{2}$\\
+so $f(x)-p_1(f;x)=\frac{1}{x}+\frac{x}{2}-\frac{3}{2} = \frac{f^{\prime\prime}(\xi(x))}{2}(x - 1)(x - 2)$\\
+$\xi(x)=(2x)^{\frac{1}{3}}$\\
+\\
+2.After extending the domain of $\xi$ continuously from $(x_0, x_1) to [x_0, x_1]$\\
+$\xi(x_0)=lim_{x->x_0}\xi(x)=(2)^{\frac{1}{3}},\xi(x_1)=lim_{x->x_1}\xi(x)=(4)^{\frac{1}{3}}$\\
+$\xi^{'}(x)=\frac{2}{3}*(2x)^{-\frac{2}{3}}>0$ in $[x_0, x_1]$\\
+so \( \max \xi(x) =(4)^{\frac{1}{3}}\), \( \min \xi(x)=(2)^{\frac{1}{3}} \), and \( \max f^{\prime\prime}(\xi(x)) =\max \frac{2}{\xi^3(x)}=1\)
+
+\section*{II}
+Let \( P_{m}^{+} \) be the set of all polynomials of degree \( \leq m \) that are non-negative on the real line,
+\[
+P_{m}^{+} = \left\{ p : p \in P_{m}, \forall x \in \mathbb{R}, p(x) \geq 0 \right\}.
+\]
+
+Find \( p \in P_{2n}^{+} \) such that \( p(x_{i}) = f_{i} \) for \( i = 0, 1, \ldots, n \) where \( f_{i} \geq 0 \) and \( x_{i} \) are distinct points on \( \mathbb{R} \).\\
+Let
+\[
+l_k(x)=\prod_{i=0;i\neq k}(\frac{x-x_k}{x_k-x_i})^2
+\]
+we have $l_k \in P_{2n}^{+}$,make $p(x)=\Sigma_{i=0}^{k}f_i*l_k(x)$ witch satisfies $p_(x_i)=f_i, p(x)\in P_{2n}^{+}$ \\
+Note that they are not unique.\\
+
+
+
+
+
+\section*{III}
+
+1.$\forall t \in \mathbb{R}$,有$f[t]=f(t)=e^t$，即n=0时符合条件\\
+若对n=k符合条件，\\
+n=k+1时\\
+$f[t,t+1,...,t+k+1]=\frac{f[t+1,...,t+k+1]-f[t,t+1,...,t+k]}{t+k+1-t}$\\
+由归纳假设可知$f[t+1,...,t+k+1]=\frac{(e-1)^{k}}{k!} e^{t+1}$\\
+$f[t,...,t+k]=\frac{(e-1)^{k}}{k!} e^{t}$\\
+得$f[t,t+1,...,t+k+1]=\frac{(e-1)^{k}*(e^{t+1}-e^t)}{k!*(k+1)}=\frac{(e-1)^{k+1}}{(k+1)!} e^{t}$成立。\\
+由归纳法知结论成立.\\
+\\
+2.由(1)可知，
+$\forall t \in \mathbb{R}, \quad f[t, t+1, \ldots, t+n] = \frac{(e-1)^{n}}{n!} e^{t}.$\\
+即$\quad f[0, 1, \ldots, n] = \frac{(e-1)^{n}}{n!}.$\\
+带入得$ \frac{(e-1)^{n}}{n!}=\frac{1}{n!} f^{(n)}(\xi)$\\
+$\xi=n*ln(e-1)$\\
+ln(e-1)$>$0.5,在$\frac{n}{2}$右侧\\
+
+
+
+\section*{IV}
+1.构建divided diffrence如下：\\
+x f\\
+0 5\\
+1 3  -2\\
+3 5  1 1\\
+4 12 7 2 0.25\\
+得到结果
+$p_3(f;x)=5-2x+x(x-1)+\frac{1}{4}x(x-1)(x-3)$\\
+$p_3(f;x)=\frac{1}{4}x^3-\frac{9}{4}x+5$\\
+
+2.用插值多项式的最小值点估计f最小值点。\\
+$p_3(f;x)'=\frac{3}{4}x^2-\frac{9}{4}$\\
+可知$p_3(f;x)$在$[-\sqrt{3},\sqrt{3}]$上递减，在$[\sqrt{3},\infty)$上递增，最小值点估计为$\sqrt{3}$\\
+
+
+\section*{V}
+1.\\
+同样构建divided diffrence
+x\\
+0: 0\\
+1: 1 1\\
+1: 1 7 6\\
+1: 1 7 21 15\\
+2: 128 127 120 99 42\\
+2: 128 448 321 201 102 30\\
+$f[0,1,1,1,2,2]=30$\\
+2.\\
+$f^{(5)}(x)=2520*x^2$\\
+带入$2520*x^2=30$,得$x=\sqrt{\frac{1}{84}}$\\
+
+
+
+\section*{VI}
+$f$ is a function on $[0,3]$ for which one knows that
+
+\[
+f(0)=1,\quad f(1)=2,\quad f^{\prime}(1)=-1,\quad f(3)=f^{\prime}(3)=0.
+\]
+
+\begin{itemize}
+    \item Estimate $f(2)$ using Hermite interpolation.
+    \item Estimate the maximum possible error of the above answer if one knows, in addition, that $f\in\mathcal{C}^{5}[0,3]$ and $|f^{(5)}(x)|\leq M$ on $[0,3]$. Express the answer in terms of $M$.
+\end{itemize}
+1.\\
+构建divided diffrence:
+x\\
+0: 1\\
+1: 2 1\\
+1: 2 -1 -2\\
+3: 0 -1 0   0.666667\\
+3: 0 0  0.5 0.25 -0.138889\\
+$p_4(f;x)=\frac{-5}{36}(x-3)(x-1)^2x+\frac{2}{3}x(x-1)^2-2x(x-1)+x+1$\\
+带入有$f(2)\approx\frac{11}{18}$\\
+2.\\
+由Theorem2.37\\
+For the Hermite interpolation problem, denote \( N = k + m_i \). Denote by \( p(f; x) \) the unique element of \( P_n \)  满足条件. Suppose \( f^{(N+1)}(r) \) exists in \((a,b)\). Then there exists some \( \xi \in (a,b) \) such that\\
+$f(x) - p_N(f; x) = \frac{f^{(N+1)}(\xi)}{(N+1)!} \prod_{i=0}^k (x - x_i)^{m_i + 1}$\\
+在这个题目中，N取4，\( f^{(5)}(r) \) exists in \((0,3)\)\\
+$|f(x) - p_4(f; x)| = |\frac{f^{(5)}(\xi)}{5!}x (x - 1)^2(x-3)^2|<=\frac{M}{5!}x (x - 1)^2(x-3)^2$\\
+令$g(x)=x (x - 1)^2(x-3)^2$\\
+$g'(x)=5(x-\frac{6-\sqrt{21}}{5})(x-1)(x-\frac{6+\sqrt{21}}{5})(x-3)$\\
+$g(x)<=max\{g(\frac{6-\sqrt{21}}{5}),g(\frac{6+\sqrt{21}}{5})\} x\in[0,3]$\\
+得误差$|f(x) - p_4(f; x)|<=M\frac{4896+336\sqrt{21}}{37500}$\\
+取$x=\frac{6+\sqrt{21}}{5}$且取此x时Theorem2.37对应得$\xi$有$f^{(5)}(\xi)=M$得到该maximum possible error\\
+
+
+
+\section*{VII}
+
+
+用归纳法，对于式子1，\\
+有对任意x,if k=1：\\
+$\Delta f(x) =f(x+h) - f(x) =h \frac{f(x+h)-f(x)}{h}= 1! h f[x_0, x_1]$成立，\\
+假设上式对任意x,k=n成立，k=n+1时：\\
+$\Delta^{n+1} f(x) = \Delta \Delta^n f(x) = \Delta^n f(x+h) - \Delta^n f(x)$\\
+由归纳假设，取k=n，有\\
+$\Delta^n f(x) = n! h^n f[x_0, x_1, \ldots, x_n]$\\
+因为按照归纳假设，k=n时结论对任意x成立，用x+h代替x，可得\\
+$\Delta^n f(x+h) = n! h^n f[x_1, x_2, \ldots, x_{n+1}]$\\
+带入\\
+$\Delta^{n+1} f(x) = \Delta \Delta^n f(x) = \Delta^n f(x+h) - \Delta^n f(x)=$\\
+$n! h^n (f[x_1, x_2, \ldots, x_{n+1}]-f[x_0, x_1, \ldots, x_n])=(n+1)! h^{n+1}\frac{f[x_1, x_2, \ldots, x_{n+1}]-f[x_0, x_1, \ldots, x_n]}{(n+1)h} $\\
+$=(n+1)! h^{n+1} f[x_0, x_1, \ldots, x_{n+1}]$成立\\
+由归纳法知结论成立\\
+
+类似地证明第二个式子\\
+有对任意x,if k=1：\\
+$\nabla f(x) =f(x) - f(x-h) =h \frac{f(x)-f(x-h)}{h}= 1! h f[x_0, x_{-1}]$成立，\\
+假设上式对任意x,k=n成立，k=n+1时：\\
+$\nabla^{n+1} f(x) = \nabla \nabla^n f(x) = \nabla^n f(x) - \nabla^n f(x-h)$\\
+由归纳假设，取k=n，有\\
+$\nabla^n f(x) = n! h^n f[x_0, x_{-1}, \ldots, x_{-n}]$\\
+因为按照归纳假设，k=n时结论对任意x成立，用x-h代替x，可得\\
+$\nabla^n f(x-h) = n! h^n f[x_{-1}, x_{-2}, \ldots, x_{-(n+1)}]$\\
+带入\\
+$\nabla^{n+1} f(x) = \nabla \nabla^n f(x) = \nabla^n f(x) - \nabla^n f(x-h)=$\\
+$n! h^n (f[x_0, x_{-1}, \ldots, x_{-n}]-f[x_{-1}, x_{-2}, \ldots, x_{-(n+1)}])=(n+1)! h^{n+1}\frac{f[x_0, x_{-1}, \ldots, x_{-n}]-f[x_{-1}, x_{-2}, \ldots, x_{-(n+1)}]}{(n+1)h} $\\
+$=(n+1)! h^{n+1} f[x_0, x_{-1}, \ldots, x_{-{n+1}}]$成立\\
+
+
+
+
+\section*{VIII}
+Assume \( f \) is differentiable at \( x_0 \). Prove
+\[
+\frac{\partial}{\partial x_0} f[x_0, x_1, \ldots, x_n] = f[x_0, x_0, x_1, \ldots, x_n].
+\]
+What about the partial derivative with respect to one of the other variables?
+从偏导定义出发，考虑\\
+$lim_{\epsilon->0}\frac{f[x_0+\epsilon, x_1, \ldots, x_n] - f[x_0,x_1, \ldots, x_n]}{\epsilon}$\\
+由最小度数插值多项式的唯一性，可以更改顺序\\
+原式=$lim_{\epsilon->0}\frac{f[x_1, \ldots, x_n,x_0+\epsilon] - f[x_0,x_1, \ldots, x_n]}{\epsilon}$\\
+=$lim_{\epsilon->0}\frac{f[x_1, \ldots, x_n,x_0+\epsilon] - f[x_0,x_1, \ldots, x_n]}{x_0+\epsilon-x_0}=f[x_0, x_1, \ldots, x_n,x_0+epsilon]$\\
+=$lim_{\epsilon->0}f[x_0+\epsilon,x_0, x_1, \ldots, x_n]$\\
+即证$lim_{\epsilon->0}f[x_0+\epsilon,x_0, x_1, \ldots, x_n]=f[x_0,x_0, x_1, \ldots, x_n]$\\
+可知\\
+$lim_{\epsilon->0}f[x_0+\epsilon,x_0]=lim_{\epsilon->0}\frac{f(x_0+\epsilon)-f(x_0)}{\epsilon}=f'(x_0)=f[x_0,x_0]$\\
+$lim_{\epsilon->0}f[x_0+\epsilon,x_0,x_1]=lim_{\epsilon->0}\frac{f[x_0+\epsilon,x_0]-f[x_0,x_1]}{\epsilon+x_0-x_1}=\frac{lim_{\epsilon->0}(f[x_0+\epsilon,x_0]-f[x_0,x_1])}{lim_{\epsilon->0}(\epsilon+x_0-x_1)}=f[x_0,x_0,x_1]$(分子分母，关于$\epsilon->0$极限均存在，且$x_1\neq x_0$,否则应该要求在$x_0$处二阶可微)\\
+递推$lim_{\epsilon->0}f[x_0+\epsilon,x_0, x_1, \ldots, x_k]=f[x_0,x_0, x_1, \ldots, x_k]$对k=m成立，k=m+1时\\
+$lim_{\epsilon->0}f[x_0+\epsilon,x_0,x_1,...x_{m+1}]=lim_{\epsilon->0}\frac{f[x_0+\epsilon,x_0...,x_m]-f[x_0,x_1,...x_{m+1}]}{\epsilon+x_0-x_{m+1}}$(由k=m时得结论，$f[x_0+\epsilon,x_0...,x_m]$关于$lim_{\epsilon->0}$极限存在,且$x_{m+1}\neq x_0$,否则应该要求在$x_0$处二阶可微，故有)\\
+$=\frac{lim_{\epsilon->0}(f[x_0+\epsilon,x_0...,x_m]-f[x_0,x_1...,x_{m+1}])}{lim_{\epsilon->0}(\epsilon+x_0-x_{m+1})}=f[x_0,x_0,x_1,...x_{m+1}]$成立\\
+递推至m=n即可\\
+故上述结论成立\\
+若考虑对其他变量，若\( f \) is differentiable at \( x_i \). \\
+$\frac{\partial}{\partial x_i} f[x_0, x_1,...x_i,..., x_n]$\\
+=$\frac{\partial}{\partial x_i} f[x_i, x_1,...x_0,..., x_n]$\\
+=$lim_{\epsilon->0}f[x_i+\epsilon,x_i, x_1, \ldots, x_n]$用同样方法可证明\\
+=$f[x_i,x_i, x_1, \ldots, x_n]=f[x_1,x_2,... x_i,x_i, \ldots, x_n]$\\
+
+
+
+
+
+
+
+\section*{IX}
+令$t=\frac{x-\frac{a+b}{2}}{\frac{b-a}{2}}$\\
+$x=\frac{b-a}{2}t+\frac{b+a}{2}$\\
+$\min \max_{x \in [a, b]} \left| a_0 x^n + a_1 x^{n-1} + \cdots + a_n \right|$\\
+$=\min \max_{t \in [-1, 1]} | a_0 (\frac{b-a}{2})^n t^n + a_1' t^{n-1} + \cdots + a_n' |$\\
+$=\min \max_{t \in [-1, 1]} a_0 (\frac{b-a}{2})^n| t^n + \frac{a_1'}{a_0 (\frac{b-a}{2})^n}* t^{n-1} + \cdots + \frac{a_n'}{a_0 (\frac{b-a}{2})^n} |$\\
+由Theorem 2.47:\\
+Denote by $\tilde{P}_{n}$ the class of all polynomials of degree $n\in \mathbb{N}^{+}$ with leading coefficient 1. Then
+\[
+\forall p \in \tilde{P}_{n}, \quad \max_{x \in [-1,1]} \left| \frac{T_{n}(x)}{2^{n-1}} \right| \leq \max_{x \in [-1,1]} \left| p(x) \right|. \qquad (2.45)
+\]
+
+\textbf{简略重述Proof}. By Theorem 2.45, $T_{n}(x)$ assumes its extrema $n+1$ times at the points $x_{k}^{\prime}$ . Suppose 上述结论 does not hold. Then
+\[
+\exists p \in \tilde{P}_{n} \quad \text{s.t.} \quad \max_{x \in [-1,1]} \left| p(x) \right| < \frac{1}{2^{n-1}}. 
+\]
+Then the polynomial $Q(x) = \frac{1}{2^{n-1}} T_n(x) - p(x)$满足：\\
+\[
+Q(x_{k}^{\prime}) = \frac{(-1)^{k}}{2^{n-1}} - p(x_{k}^{\prime}), \quad k = 0, 1, \ldots, n.
+\]
+ $Q(x)$ 在 $n+1$ points依次变换符号，至少有n个零点. 但是 $\frac{1}{2^{n-1}} T_n(x)$和p(x)的n次项系数相同, the degree of $Q(x)$ is at most $n-1$. Therefore, $Q(x) \equiv 0$ and $p(x) = \frac{1}{2^{n-1}} T_{n}(x)$, which implies $\max |p(x)| = \frac{1}{2^{n-1}}$，矛盾. \\
+故\\
+$\min \max_{t \in [-1, 1]} | t^n + \frac{a_1'}{a_0 (\frac{b-a}{2})^n}* t^{n-1} + \cdots + \frac{a_n'}{a_0 (\frac{b-a}{2})^n}|=\frac{1}{2^{n-1}}$\\
+$\min \max_{x \in [a, b]} \left| a_0 x^n + a_1 x^{n-1} + \cdots + a_n \right|=a_0 (\frac{b-a}{2})^n*\frac{1}{2^{n-1}}$\\
+当$a_0 x^n + a_1 x^{n-1} + \cdots + a_n=a_0 (\frac{b-a}{2})^n*\frac{1}{2^{n-1}} T(\frac{x-\frac{a+b}{2}}{\frac{b-a}{2}})$取等\\
+
+
+
+\section*{X}
+证明$\forall p \in P_n^a \quad \left\| \hat{p}_n \right\|_{\infty} \leq \| p \|_{\infty}$\\
+即证$\forall p \in P_n^a$ $max_{x\in[-1,1]}|T_n(x)| \leq max_{x\in[-1,1]}|T(a)||p(x)|$\\
+$\forall p \in P_n^a$\\
+已知$max_{x\in[-1,1]}|T_n(x)|=1$
+由于$T(n)\in P_n$,且T(n)在[-1,1]上已经有n个零点,a>1，故$T(a)\neq 0$\\
+若结论不成立\\
+$\exists p \in P_n^a \quad \text{s.t.} \quad \max_{x \in [-1,1]} \left| p(x) \right| < \frac{1}{T(a)}. $
+取这个p,令：\\
+$Q(x) = T_n(x) - T(a) p(x)$ Q(a)=0.\\
+By Theorem 2.45, $T_{n}(x)$ assumes its extrema $n+1$ times at the points $x_{k}^{\prime}$,这些点上的函数值依次为1或-1交替\\
+故$Q(x)$ 在 $n+1$ points依次变换符号，至少有n个零点，考虑Q(a)=0,$a\notin [-1,1]$，故Q(x)有至少n+1个0点，但$Q(x)\in P_n$,故Q(x)=0恒成立。\\
+$p(x)=\frac{T_n(x)}{T(a)}$,$\max_{x \in [-1,1]} \left| p(x) \right|=\frac{1}{T(a)}$,矛盾\\
+故结论成立\\
+
+
+
+
+\section*{XI}
+由定义\\
+$b_{n,k}(t) := \binom{n}{k} t^k (1-t)^{n-k} $\\
+$b_{n,k+1}(t) := \binom{n}{k+1} t^{k+1} (1-t)^{n-k-1} $\\
+带入得\\
+$\frac{n-k}{n}b_{n,k}(t)+\frac{k+1}{n}b_{n,k+1}(t)=\binom{n}{k}\frac{n-k}{n} t^k (1-t)^{n-k}+\frac{k+1}{n}\binom{n}{k+1} t^{k+1} (1-t)^{n-k-1}$\\
+$=t^k(1-t)^{n-k-1}((1-t)\frac{n-k}{n}\binom{n}{k}+t\frac{k+1}{n}\binom{n}{k+1})$\\
+又：
+$(1-t)\frac{n-k}{n}\binom{n}{k}+t\frac{k+1}{n}\binom{n}{k+1}=(1-t)\frac{n-k}{n}\frac{n!}{k!(n-k)!}+t\frac{k+1}{n}\frac{n!}{(k+1)!(n-k-1)!}$
+$=(1-t+t)\frac{(n-1)!}{k!(n-1-k)!}=\binom{n-1}{k}$\\
+综上：\\
+$\frac{n-k}{n}b_{n,k}(t)+\frac{k+1}{n}b_{n,k+1}(t)=\binom{n-1}{k}t^k(1-t)^{n-k-1}=b_{n-1,k}(t)$\\
+\section*{XII}
+需证明：\\
+$\forall k = 0, 1, \ldots, n, \quad \int_{0}^{1} b_{n,k}(t) \, dt = \frac{1}{n+1}.$
+$b_{n,k}(t) := \binom{n}{k} t^k (1-t)^{n-k}$\\
+$\quad \int_{0}^{1} b_{n,k}(t) \, dt=\binom{n}{k}\quad \int_{0}^{1}t^k (1-t)^{n-k}\, dt$\\
+若k=0\\
+原式=$\int_{0}^{1}t^{n}\, dt=\frac{1}{n+1}$成立\\
+若k=n\\
+原式=$\int_{0}^{1}(1-t)^{n}\, dt=\frac{1}{n+1}$也成立\\
+$k\geq1$且$k\leq n-1$时\\
+$\int_{0}^{1}t^k (1-t)^{n-k}\, dt=\frac{1}{k+1}t^{k+1} (1-t)^{n-k}|_{0}^1-(-1)\int_{0}^{1}\frac{n-k}{k+1}t^{k+1}(1-t)^{n-k-1}\, dt$\\
+=$\frac{n-k}{k+1}\int_{0}^{1}t^{k+1}(1-t)^{n-k-1}\, dt$\\
+重复，直到(1-t)的指数为1\\
+=$\frac{(n-k)(n-k-1)...2}{(k+1)(k+2)...(n-1)}\int_{0}^{1}t^{n-1}(1-t)\, dt$\\
+=$\frac{(n-k)(n-k-1)...2}{(k+1)(k+2)...(n-1)}*(\frac{1}{n}-\frac{1}{n+1})$\\
+=$1/\binom{n}{k}\frac{1}{n+1}$\\
+故$\quad \int_{0}^{1} b_{n,k}(t) \, dt=\binom{n}{k}\quad \int_{0}^{1}t^k (1-t)^{n-k}\, dt=\frac{1}{n+1}$\\
+结论成立\\
+
+
+\section*{ \center{\normalsize {Acknowledgement}} }
+Use GPT-4 for quick template transformation, and use Kimi AI to correct English grammar.
+
+
+\end{document}
+
+
