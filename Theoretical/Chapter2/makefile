@@ -3,10 +3,10 @@
 report: doc
 
 doc: answer.tex
-	@pdflatex answer.tex
-	@bibtex answer
-	@pdflatex answer.tex
-	@pdflatex answer.tex
+	@pdflatex HW2_3220103383_LuoKaicheng.tex
+	@bibtex HW2_3220103383_LuoKaicheng
+	@pdflatex HW2_3220103383_LuoKaicheng.tex
+	@pdflatex HW2_3220103383_LuoKaicheng.tex
 
 
 .PHONY: clean
