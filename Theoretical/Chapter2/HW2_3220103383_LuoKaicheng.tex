@@ -41,13 +41,14 @@ we have \( \xi(x_0) = \lim_{x \to x_0} \xi(x) = 2^{\frac{1}{3}}, \xi(x_1) = \lim
  Thus, \( \max \xi(x) = 4^{\frac{1}{3}} \), \( \min \xi(x) = 2^{\frac{1}{3}} \), and \( \max f''(\xi(x)) = \max \frac{2}{\xi^3(x)} = 1 \).
 \\
 \section*{II}
-Let
+We let
 \[
 l_k(x) = \prod_{i=0; i \neq k}^n \left( \frac{x - x_i}{x_k - x_i} \right)^2,
 \]
 \\we have \( l_k \in P_{2n}^{+} \),  \(l_k(x_k)=1,l_k(x_j)=0 (j \neq k) \).\\
 Make \( p(x) = \sum_{i=0}^{k} f_i l_k(x) \).\\
 It satisfies \( p(x_i) = f_i, p(x) \in P_{2n}^{+} \).
+But this is not unique\\
 
 \section*{III}
 1. For all \( t \in \mathbb{R} \), we have \( f[t] = f(t) = e^t \), which meets the condition when \( n = 0 \). If it holds for \( n = k \),
@@ -107,7 +108,7 @@ f^{(5)}(\xi) = 2520 \xi^2,
 \[
 \frac{f^{(5)}(\xi)}{5!} = 21 \xi^2.
 \]
-Substituting \( 21 \xi^2 = 30 \), we get \( \xi = \frac{\sqrt{70}}{7} \in (0,2) \).
+Substituting \( 21 \xi^2 = 30 \), we get \( \xi = \frac{\sqrt{70}}{7} \). (\(\xi \in (0,2) \)).
 
 \section*{VI}
 1.
@@ -182,7 +183,7 @@ Substituting
 
 $\nabla^{n+1} f(x) = \nabla \nabla^n f(x) = \nabla^n f(x) - \nabla^n f(x-h) = n! h^n (f[x_0, x_{-1}, \ldots, x_{-n}] - f[x_{-1}, x_{-2}, \ldots, x_{-(n+1)}]) \\
 = (n+1)! h^{n+1} \frac{f[x_0, x_{-1}, \ldots, x_{-n}] - f[x_{-1}, x_{-2}, \ldots, x_{-(n+1)}]}{(n+1)h}$
-\(= (n+1)! h^{n+1} f[x_0, x_{-1}, \ldots, x_{-{n+1}}] \) holds.\\
+\(= (n+1)! h^{n+1} f[x_0, x_{-1}, \ldots, x_{-{(n+1)}}] \) holds.\\
 By mathematical induction, the conclusion is valid.
 
 \section*{VIII}
@@ -191,15 +192,15 @@ Using mathematical induction, when \( n = 0 \):
 \frac{\partial}{\partial x_0} f[x_0] = \lim_{\epsilon \to 0} \frac{f[x_0 + \epsilon] - f[x_0]}{\epsilon} = \lim_{\epsilon \to 0} \frac{f(x_0 + \epsilon) - f(x_0)}{\epsilon} = f'(x_0) = f[x_0, x_0]
 \]
 
-\(\frac{\partial}{\partial x_0} f[x_0, x_1] = \frac{\partial}{\partial x_0} \frac{f[x_0] - f[x_1]}{x_0 - x_1}\)
-\(= \frac{-(f[x_0] - f[x_1])}{(x_0 - x_1)^2} + \frac{\frac{\partial}{\partial x_0} f[x_0]}{x_0 - x_1} = \frac{-f[x_0, x_1] + f[x_0, x_0]}{x_0 - x_1} = f[x_0, x_0, x_1] \) holds.\\
+\(\frac{\partial}{\partial x_0} f[x_0, x_1] = \frac{\partial}{\partial x_0} \frac{f[x_0] - f[x_1]}{x_0 - x_1}\)\\
+\( x_k \neq x_0\) \( k=1,2...\), otherwise it should be required that \( f \) is higher-order differentiable at \( x_0 \).\\
+\(\frac{\partial}{\partial x_0} \frac{f[x_0] - f[x_1]}{x_0 - x_1}= \frac{-(f[x_0] - f[x_1])}{(x_0 - x_1)^2} + \frac{\frac{\partial}{\partial x_0} f[x_0]}{x_0 - x_1} = \frac{-f[x_0, x_1] + f[x_0, x_0]}{x_0 - x_1} = f[x_0, x_0, x_1] \) holds.\\
 Assume that \( \frac{\partial}{\partial x_0} f[x_0, x_1, \ldots, x_n] = f[x_0, x_0, \ldots, x_n] \) holds for \( n = k \).\\
 When \( n = k + 1 \):\\
 
 \(\frac{\partial}{\partial x_0} f[x_0, x_1, \ldots, x_{k+1}] = \frac{\partial}{\partial x_0} \frac{f[x_0, x_1, \ldots, x_k] - f[x_1, x_2, \ldots, x_k]}{x_0 - x_{k+1}}\)
 \(= \frac{-(f[x_0, x_1, \ldots, x_k] - f[x_1, x_2, \ldots, x_{k+1}])}{(x_0 - x_{k+1})^2} + \frac{\frac{\partial}{\partial x_0} f[x_0, x_1, \ldots, x_k]}{x_0 - x_{k+1}} = \\
 \frac{-f[x_0, x_1, \ldots, x_{k+1}] + f[x_0, x_0, \ldots, x_k]}{x_0 - x_{k+1}} \) (by the induction hypothesis) \( = f[x_0, x_0, x_1, \ldots, x_{k+1}] \) holds.\\
-And \( x_k \neq x_0 \), otherwise it should be required that \( f \) is higher-order differentiable at \( x_0 \).\\
 By mathematical induction, the conclusion is valid.
 
 If considering the partial derivative with respect to other variables, if \( f \) is differentiable at \( x_i \).\\
