@@ -1,0 +1,444 @@
+\documentclass[a4paper]{article}
+%\usepackage[affil-it]{authblk}
+\usepackage[backend=bibtex,style=numeric]{biblatex}
+\usepackage{float}
+\usepackage{amsmath}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{amssymb}
+\usepackage{ctex}
+\usepackage{booktabs}
+
+\geometry{margin=1.5cm, vmargin={0pt,1cm}}
+\setlength{\topmargin}{-1cm}
+\setlength{\paperheight}{29.7cm}
+\setlength{\textheight}{25.3cm}
+
+\newcommand{\ProgramOutput}[1]{%
+  \CatchFileDef{\ProgramOutputContent}{#1}{\endlinechar=-1 }%
+  \begin{verbatim}
+  \ProgramOutputContent
+  \end{verbatim}
+}
+
+\begin{document}
+% ==================================================
+\title{Numerical Analysis Programming 1}
+
+\author{Luo Kaicheng 3220103383
+  \thanks{Electronic address: \texttt{3220103383@zju.edu.com}}}
+%\affil{(Information and Computational Science 2201), Zhejiang University}
+
+\date{Due time: \today}
+
+\maketitle
+
+\begin{abstract}
+    Solutions to programming assignments.
+\end{abstract}
+
+% ============================================
+\section*{Design Document}
+There are a total of 5 classes: \\
+\textbf{Function.hpp's Function class}. Used to return function values. \\
+\\
+Accepts a double input variable and returns a reference to a function of type double \\
+\begin{verbatim}
+class Function{
+private:
+    double (*function)(double);
+public:
+    Function(double (*func)(double)) : function(func) {}
+    double function_value(double x) const {
+        return function(x);
+    }
+};
+\end{verbatim}
+\textbf{PA\_Newton\_Formula.hpp's Newton\_formula class}, used for interpolation with known functions and known nodes \\
+This class accepts a reference to a Function class and a series of interpolation points as inputs, and requires that the input points be unique, otherwise it will throw an error. \\
+In the constructor, the divided differential is established. A $vector<double>$ coefficients is used to store the coefficients of each term, and the pseudocode for the constructor is as follows \\
+\begin{verbatim}
+    Input: Function F, set of points points
+    Output: Interpolation polynomial coefficients coefficients
+
+    1. Initialize the coefficient array coefficients to empty
+    2. For each point x in points:
+        a. Calculate the value of function F at x
+        b. Add the result to the coefficients array
+    3. For i from 1 to points.size()-1:
+        a. Update the divided differences from top to bottom, 
+         j from coefficients.size()-1 down to position i:
+            Calculate the divided difference between the current coefficient and the previous one.
+            These two 'coefficients' correspond to different nodes, 
+            which are the current points[j] and points[j-i].
+            i. If points[j] and points[j-i] are the same, throw an error "Input error", 
+            Hermite interpolation should be used
+            ii. Calculate the divided difference at the current point:
+                (current_coefficient - previous_coefficient) / (points[j] - points[j-i])
+            iii. Update the current coefficient to the result of the divided difference
+\end{verbatim}
+In this way, the class stores the coefficients corresponding to the interpolation polynomial, i.e. \\
+\(\pi_n(x) = \begin{cases}
+    1, & n = 0; \\
+    \prod_{i=0}^{n-1}(x - x_i), & n > 0.
+\end{cases}\)
+$p_n(x) = \sum_{k=0}^{n} a_k \pi_k(x)$ \\
+Where $a_k$ \\
+Next, you can call the get\_interpolation\_value function to return the function value of the interpolation polynomial \\
+\begin{verbatim}
+    double get_interpolation_value(double x){
+        double po=1,value=0;
+        size_t i;
+        for(i=0;i<coefficients.size();i++){
+            value+=coefficients[i]*po;
+            po*=x-interpolation_points[i];
+        }
+        return value;
+    }
+\end{verbatim}
+Where po is used to store the value of $\pi_n(x)$ in the formula and is continuously updated, multiplied by the corresponding coefficient, and accumulated to obtain the result \\
+\\
+\textbf{Newton\_Formula\_without\_F.hpp's Newton\_formula\_WF class} is used for interpolation when the function cannot be directly obtained, only a set of function points and corresponding function values are given \\
+The design method is almost the same as the Newton\_formula class, except that instead of inputting a function class, a series of function points are inputted \{x,f(x)\} \\
+However, the input is a $vector<vector<double>>$ interpolation\_points. That is, a vector that stores a vector containing two elements \{x,f(x)\}, corresponding to a function point \\
+The pseudocode for the constructor is as follows
+\begin{verbatim}
+    Input: set of function points points
+    Output: interpolation polynomial coefficients coefficients
+
+    1. Initialize the coefficient array coefficients to empty
+    2. For each point x in points:
+        a. Access the known function value corresponding to x with points[i][1]
+        b. Add the result to the coefficients array
+    3. For i from 1 to points.size()-1:
+        a. Update the divided differences from top to bottom, 
+          j from coefficients.size()-1 down to position i:
+            Calculate the divided difference between the current coefficient and the previous one.
+            These two 'coefficients' correspond to different nodes, 
+            which are the current points[j] and points[j-i].
+            i. If points[j] and points[j-i] are the same, throw an error "Input error", 
+                Hermite interpolation should be used.
+            ii. Calculate the divided difference at the current point:
+                (current_coefficient - previous_coefficient) / (points[j] - points[j-i])
+            iii. Update the current coefficient to the result of the divided difference
+\end{verbatim}
+After construction, the method to call the interpolation polynomial and return the function value of the interpolation polynomial, get\_interpolation\_value, is almost the same \\
+You just need to change the way to access the interpolation point x to interpolation\_points[i]$->$interpolation\_points[i][0] \\
+\textbf{Hermite.hpp's Hermite class} is used for the interpolation problem
+Given distinct points $x_{0}, x_{1},\ldots, x_{k}$ in $[a, b]$, non-negative integers $m_{0}, m_{1},\ldots, m_{k}$, and a function $f\in\mathcal{C}^{M}[a, b]$ where $M=\max_{i} m_{i}$, the Hermite interpolation problem seeks a polynomial $p$ of the lowest degree such that
+
+\[
+\forall i=0,1,\ldots, k,\forall\mu=0,1,\cdots, m_{i}, \quad p^{(\mu)}(x_{i})=f_{i}^{(\mu)}, \quad (2.36)
+\]
+
+where $f_{i}^{(\mu)}=f^{(\mu)}(x_{i})$ is the value of the $\mu$th derivative of $f$ at $x_{i}$; in particular, $f_{i}^{(0)}=f(x_{i})$. \\
+Accepts two variables, one is the set of $\{x_i,f(x_i),m_i-1\}$, corresponding to the interpolation point x, function value f(x), and how many derivative restrictions there are in addition to the function value. The other is a set composed of each point $x_i$ corresponding to $\{f'(x),f^{''}(x)...f^{(m_i-1)}(x)\}$, $m_i-1=0$, an empty set needs to be passed if not. \\
+The idea of the constructor is as follows. First, "flatten" all interpolation points, \\
+Like $\{\{x_0,f(x_0),m_0-1\}...\{x_i,f(x_i),m_i-1\}...\}->\{x_0,x_0,(m_0 points of x_0)...x_i,x_i,(m_i points of x_i)...\}$ \\
+Get a new set of interpolation points x with repeated points, interpolation. \\
+At the same time, create a coefficient set coefficients, initialized to the same size as interpolation, each element is the f(x) corresponding to the x at the corresponding position of interpolation. \\
+Use the formula $f[x_i,x_i...]=\frac{f^{(n)(x_i)}}{n!}$ \\
+And $f[x_{0},x_{1},\ldots,x_{k}] = \frac{f[x_{1},x_{2},\ldots,x_{k}] - f[x_{0},x_{1},\ldots,x_{k-1}]}{x_{k} - x_{0}}.$ \\
+Construct the interpolation table and iterate interpolation.size()-1 times to get the result. \\
+The pseudocode for the constructor is as follows \\
+\begin{verbatim}
+Input: set of points points, set of derivatives deriv
+Output: polynomial coefficients coefficients, interpolation points interpolation
+
+Initialize the set of repeated interpolation points x, interpolation, 
+and the coefficient set coefficients
+    1. Initialize the interpolation point set interpolation_points to points
+    2. Initialize the derivative set derivative to deriv
+    3. Initialize the coefficient set coefficients to empty
+    4. Initialize the interpolation point set interpolation to empty
+    5. For each interpolation point points[i]:
+        a. For each derivative order j (from 0 to mi-1, i.e., repeat mi times):
+            i. Add points[i][1] to coefficients
+            ii. Add points[i][0] to interpolation
+Start iteration and update   
+    6. For each coefficient i (from 1 to the size of coefficients minus one), 
+    indicating the number of iterations:    
+        For each coefficient j (from the size of coefficients minus one to i),
+        indicating updating from the last position to the i-th position:
+            Maintain a pointer, pointing to the serial number of interpolation[j] 
+            in the derivative.
+            i. If interpolation[j] is equal to interpolation[j-i]:
+                A. If the size of derivative[pointer] is less than i, 
+                    throw an error "Insufficient differential information."
+                B. Set coefficients[j] to derivative[pointer][i-1] divided by i factorial
+            ii. Otherwise:
+                A. Set coefficients[j] to 
+                    (coefficients[j] - coefficients[j-1])/(interpolation[j] - interpolation[j-i])
+            iii. Update pointer
+\end{verbatim}
+
+Use get\_interpolation\_value to return the function value of the interpolation polynomial at the corresponding point, the implementation method is almost exactly the same as the previous two classes \\
+\begin{verbatim}
+double get_interpolation_value(double x){
+        double po=1,value=0;
+        size_t i;
+        for(i=0;i<coefficients.size();i++){
+            value+=coefficients[i]*po;
+            po*=x-interpolation[i];
+        }
+        return value;
+    }
+\end{verbatim}
+c
+
+It also provides a method to return the first derivative of a point, which is the analytical solution here. \\
+Note that
+\(\pi_n(x) = \begin{cases}
+    1, & n = 0; \\
+    \prod_{i=0}^{n-1}(x - x_i), & n > 0.
+\end{cases}\)
+$p_n(x) = \sum_{k=0}^{n} a_k \pi_k(x)$ \\
+Taking the derivative gives $p_n^{'}(x) = \sum_{k=0}^{n} a_k\sum_{i=0}^{k-1}\prod_{j=0,j\neq i}^{k-1}(x - x_j)$ \\
+We just need to maintain an n-dimensional vector, and in the m-th round, the position n stores the product $\prod_{j=0,j\neq n}^{m}(x - x_j)$ \\
+Each time we take the elements from positions 0-m-1, sum them up, multiply by $a_m$, and accumulate them into the result variable result. After m+1 rounds, update this n-dimensional vector, except for the m+1th position, each position is multiplied by $(x-x_{m+1})$ \\
+The pseudocode is as follows：
+\begin{verbatim}
+    Function get_derivative_value(x)
+    Input: x
+    Output: derivative value result
+
+1. Initialize result to 0
+2. Initialize value to an empty vector
+3. Call update(&value, x, -1)
+4. For i from 1 to the size of coefficients minus one:
+    a. Call update(&value, x, i-1)
+    b. For j from 0 to i-1:
+        i. Add the product of coefficients[i] and value[j] to result
+5. Return result
+
+Function update(value, x, iter)
+    Input: value, x, iter
+    Output: updated value
+
+1. For i from 0 to the size of coefficients minus one:
+    a. If iter equals -1, add 1 to value
+    b. Otherwise, if i is not equal to iter, 
+        multiply the i-th element of value by (x - interpolation[iter])
+\end{verbatim}
+
+\textbf{Cubic\_Bezier.hpp's Cubic\_Bezier class} is used to construct suitable cubic polynomials on each interval of a two-dimensional image \\
+Assume a curve in the plane $R^D$ as $t (a,b)->R^D$.
+dimension=D \\
+Take m+1 points $t_i$,构成 a vector t, and a vector interpolation\_points corresponding to each $t_i$ as $P_i \in R^D$. \\
+You also need to calculate the tangent vector on each $P_i$ and put it into the vector derivatives, noting that each element of derivatives is \\
+A left derivative value and a right derivative value corresponding to $P_i$, $\gamma(P_i^{-}),\gamma(P_i^{+})$, if it is on the boundary, the left derivative equals the right derivative (the left derivative does not exist) or the right derivative equals the left derivative (the right derivative does not exist) \\
+This setting is because in problem F, there is a case where the left derivative is not equal to the right derivative. \\
+Cubic\_Bezier accepts such t, interpolation\_points, derivatives, and dimension as input to construct a class. \\
+The main task of the constructor is to construct m intervals $[P_i,P_{i+1}]$ based on the input, and each interval corresponds to four points $\{q_0=P_i,q_1=P_i+\frac{1}{3}derivative[i][1],q_2=P_{i+1}-\frac{1}{3}derivative[i][0],q_3=P_{i+1}\}$ \\
+In this way, m sets of 4 points constitute a vector qs. \\
+The constructor is as follows \\
+\begin{verbatim}
+Input: set of interpolation points interpolation_points, set of parameters ts, 
+    set of derivatives derivatives, dimension input_dimension
+Output: processed point set qs
+
+1. Initialize the dimension dimension to input_dimension
+2. Initialize m to the size of the interpolation point set minus one
+3. Assign the interpolation_points to points
+4. Assign ts to t
+5. If the size of the derivative set is less than m+1, throw an error "Insufficient information"
+6. For each point in the time point set (from the first to the second to last):
+    a. Initialize a new point set q
+    b. Add the current interpolation point to q
+    c. Create a new point new_point and initialize it to the current interpolation point
+    d. For each dimension j:
+        i. Update the j-th dimension value of new_point to the j-th dimension value of the current
+             interpolation point plus 1/3 of the corresponding right derivative in derivatives
+    e. Add new_point to q
+    f. Clear new_point
+    g. Assign the next interpolation point to new_point
+    h. For each dimension j:
+        i. Update the j-th dimension value of new_point to the j-th dimension value of the next 
+            interpolation point minus 1/3 of the corresponding left derivative in derivatives
+    j. Add new_point to q
+    k. Add the next point of the current interpolation point to q
+    l. Add q to qs
+
+7. Obtain qs
+\end{verbatim}
+Complete construction \\
+In order to return the corresponding estimated point for its input t. Design function get\_value \\
+Find the interval to which t\_input belongs \\
+Use the formula $B(t) := \sum_{k=0}^{n} q_k b_{n,k}(t)$ \\
+\begin{verbatim}
+    Input: t_input
+    Output: the value of t_input, result
+    I. Find which of the m intervals t_input belongs to
+        1. Initialize the position location to 0
+        2. For each time point t[location] (from 0 to m):
+            a. If t[location] is greater than t_input, break the loop
+        3. If location is 0, throw an error "Out of range"
+        4. If location is m+1, and t[m] plus a small amount eps is still greater than t_input, 
+            set location to m, otherwise throw an error "Out of range"
+    II. Calculate the corresponding function value in the interval where it is located
+        5. The independent variable of each interval's Bézier curve is [0,1],
+            change t_prime to (t_input - t[location-1]) divided by (t[location] - t[location-1])
+            6. Initialize the result vector result to empty
+            7. For each dimension i (from 0 to dimension-1):
+                a. Calculate the current dimension's value, using the formula of the Bézier curve:
+                    qs[location-1][0][i] * (1 - t_prime)^3 +
+                    3 * qs[location-1][1][i] * t_prime * (1 - t_prime)^2 +
+                    3 * qs[location-1][2][i] * t_prime^2 * (1 - t_prime) +
+                    qs[location-1][3][i] * t_prime^3
+                b. Add the calculation result to result
+            8. Return result
+    \end{verbatim}
+    Get the estimated point corresponding to t, and the curve can be drawn \\
+    
+    
+    \section*{B}
+    Run your routine on the function
+    \[
+    f(x) = \frac{1}{1 + x^2}
+    \]
+    for $x \in [-5,5]$ using $x_i = -5 + 10\frac{i}{n}$, $i = 0, 1, \ldots, n$, and $n = 2, 4, 6, 8$. Plot the polynomials against the exact function to reproduce the plot in the notes that illustrate the Runge phenomenon.
+    
+    Input the corresponding points and function references into the Newton\_method class to obtain the interpolation formula.
+    And call the python function to draw. \\
+    Take n in turn, and finally draw the curve of the function itself \\
+    \begin{figure}[H]
+        \centering 
+        \includegraphics[width=0.8\textwidth]{ProblemBplot.png} 
+        \caption{Plot for Problem B} 
+        \label{fig:example} 
+    \end{figure}
+    Through the image, we can see that the interpolation polynomial and the Runge function differ greatly.\\
+    
+    
+    \section*{C}
+    Reuse your subroutine of Newton interpolation to perform Chebyshev interpolation for the function
+    \[
+    f(x) = \frac{1}{1 + 25x^2}
+    \]
+    for $x \in [-1, 1]$ on the zeros of Chebyshev polynomials $T_n$ with $n = 5, 10, 15, 20$. Clearly the Runge function $f(x)$ is a scaled version of the function in B. Plot the interpolating polynomials against the exact function to observe that the Chebyshev interpolation is free of the wide oscillations in the previous assignment.
+    
+    Input the Chebyshev polynomial zero points and function references into the Newton\_method class to obtain the interpolation formula.
+    And call the python function to draw. \\
+    Take n in turn, and finally draw the curve of the function itself \\
+    \begin{figure}[H]
+        \centering 
+        \includegraphics[width=0.8\textwidth]{ProblemCplot.png} 
+        \caption{Plot for Problem C} 
+        \label{fig:example} 
+    \end{figure}
+    Using Chebyshev polynomial zero points for interpolation can more effectively approximate this type of function\\
+    
+    
+    \section*{D.}
+    A car traveling along a straight road is clocked at a number of points. The data from the observations are given in the following table, where the time is in seconds, the displacement is in feet, and the velocity is in feet per second.
+    
+    \begin{table}[H]
+        \centering
+        \begin{tabular}{@{}cccccc@{}}
+            \toprule
+            Time & 0 & 3 & 5 & 8 & 13 \\ \midrule
+            displacement & 0 & 225 & 383 & 623 & 993 \\
+            velocity & 75 & 77 & 80 & 74 & 72 \\ \bottomrule
+        \end{tabular}
+    \end{table}
+    
+    \begin{enumerate}
+        \item[(a)] Use a Hermite polynomial to predict the position of the car and its speed for $t = 10$ seconds.
+        \item[(b)] Use the derivative of the Hermite polynomial to determine whether the car ever exceeds the speed limit of 55 miles per hour, i.e., 81 feet per second.
+    \end{enumerate}
+    Use the given values for interpolation polynomial, call the new Hermite class, to get the result. \\
+    Bring in t=10.\\
+    
+    Predict the position of the car and its speed for t=10 seconds
+    position: 742.503 feet. speed: 48.3817 feet per second. \\
+    Call the derivative function designed in the class.\\
+    
+    Use a gradient optimization method, keep moving in the direction of the gradient, until the speed limit is exceeded or the maximum number of iterations is exceeded
+    
+    This car exceeded the speed limit.
+    t=6.84951s speed = 81.1955 feet per second
+    
+    
+    \section*{E.}
+    It is suspected that the high amounts of tannin in mature oak leaves inhibit the growth of the winter moth larvae.\\
+    
+    The following table lists the average weight of two samples of larvae at times in the first 28 days after birth. The first sample was reared on young oak leaves, whereas the second sample was reared on mature leaves from the same tree.
+    
+    \begin{table}[H]
+        \centering
+        \begin{tabular}{@{}cccccccc@{}}
+            \toprule
+            Day & 0 & 6 & 10 & 13 & 17 & 20 & 28 \\ \midrule
+            Sp1 & 6.67 & 17.3 & 42.7 & 37.3 & 30.1 & 29.3 & 28.7 \\
+            Sp2 & 6.67 & 16.1 & 18.9 & 15.0 & 10.6 & 9.44 & 8.89 \\ \bottomrule
+        \end{tabular}
+    \end{table}
+    
+    \begin{enumerate}
+        \item[(a)] Use Newton's formula to approximate the average weight curve for each sample.
+        \item[(b)] Predict whether the two samples of larvae will die after another 15 days.
+    \end{enumerate}
+    
+    This is an ordinary case, where the function is not provided and there are no repeated nodes, call the class Newton\_method\_WF in the file Newton\_method\_without\_F. \\
+    Draw the curve \\
+    \begin{figure}[H]
+        \centering 
+        \includegraphics[width=0.8\textwidth]{ProblemEplot.png} 
+        \caption{average weight curve} 
+        \label{fig:example} 
+    \end{figure}
+    
+    Use the polynomial to predict future weight \\
+    Sp1 after another 15 days: average weight: 14640.3 \\
+    Abnormal weight, predicted to die. \\
+    Sp2 after another 15 days: average weight: 2981.48 \\
+    Abnormal weight, predicted to die.
+    
+    \section*{F.}
+    The roots of the following equation constitute a closed planar curve in the shape of a heart:
+    \[
+    x^2 + \left(\frac{3}{2} y - \sqrt{|x|}\right)^2 = 3. \quad (2.61)
+    \]
+    
+    Write a program to approximate the heart by cubic Bézier curves and plot your approximant, i.e., the piece-wise cubic polynomials. Choose $m = 10, 40, 160$ in Algorithm 2.74 and produce three plots of the heart function. Your knots should include the characteristic points.
+    
+    Parameterize the curve by setting x=$\sqrt{3}\cos(2\pi t)$ and y=$\frac{2}{3}*(-\sqrt{3}\sin(2\pi t)+\sqrt{\sqrt{3}|cos(2\pi t)|})$ \\
+    $t \in [0,1]$ \\
+    Calculate the corresponding tangent vector. \\
+    $dx=-\sqrt{3} \cdot 2\pi\sin(2\pi t)$ \\
+    When $t>0.25 and t<0.75$ \\
+    $dy = \frac{2}{3} \left( -2\pi\sqrt{3}\cos(2\pi t) + \frac{\pi\sqrt{\sqrt{3}}}{\sqrt{|\cos(2\pi t)|}}\sin(2\pi t) \right)$ \\
+    When $t<0.25 or t>0.75$ \\
+    $dy = \frac{2}{3} \left( -2\pi\sqrt{3}\cos(2\pi t) - \frac{\pi\sqrt{\sqrt{3}}}{\sqrt{|\cos(2\pi t)|}}\sin(2\pi t) \right)$ \\
+    When $t=0.25 or t=0.75$ \\
+    $dy$ does not exist, and approaches infinity on both sides, we set it to a large value of 20 here. \\
+    At the same time, the derivative approaches positive infinity on the left side of $t=0.25$ and negative infinity on the right side, so for $t=0.25$, take the positive on the left and negative on the right. Similarly for $t=0.75$. \
+    Input m+1 t's, the corresponding x, y, and the derivative at that position into the Cubic\_bezier class to get the curve. \
+    Take m in turn, and obtain the curve, call the python function to draw. \
+    The pictures are as follows \
+    \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{ProblemF_m=10_plot.png}
+    \caption{m=10}
+    \label{fig:example}
+    \end{figure}
+    \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{ProblemF_m=40_plot.png}
+    \caption{m=40}
+    \label{fig:example}
+    \end{figure}
+    \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{ProblemF_m=60_plot.png}
+    \caption{m=60}
+    \label{fig:example}
+    \end{figure}
+    
+    \section*{ \center{\normalsize {Acknowledgement}} }
+    Use GPT-4 for quick template transformation, and use Kimi AI to correct English grammar.
+    
+    \end{document}
+    
+
