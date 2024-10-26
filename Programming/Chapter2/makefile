@@ -35,4 +35,5 @@ report.pdf: report.tex
 clean:
 	rm -f $(TARGETS) report.aux report.log report.bbl report.blg report-blx.bib report.run.xml ProblemB ProblemC ProblemD ProblemE ProblemF ProblemB.txt ProblemC.txt ProblemD.txt ProblemE.txt ProblemF.txt report.synctex.gz
 
-clean_picture: rm -f ProblemCplot.png ProblemBplot.png ProblemEplot.png ProblemF_m=10_plot.png ProblemF_m=40_plot.png ProblemF_m=60_plot.png
+clean_picture: 
+	rm -f ProblemCplot.png ProblemBplot.png ProblemEplot.png ProblemF_m=10_plot.png ProblemF_m=40_plot.png ProblemF_m=60_plot.png
