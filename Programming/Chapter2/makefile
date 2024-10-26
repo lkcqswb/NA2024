@@ -23,7 +23,7 @@ run_test:
 		./$$target > $$target.txt; \
 	done
 
-report: compile run_test report.pdf clean
+report: compile run_test report.pdf clean clean_picture
 
 report.pdf: report.tex
 	@pdflatex report.tex
