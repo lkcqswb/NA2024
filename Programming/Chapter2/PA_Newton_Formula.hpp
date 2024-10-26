@@ -4,7 +4,7 @@
 #include"Function.hpp"
 #include<vector>
 using namespace std;
-typedef unsigned long long size_t;
+
 class  Newton_formula{
 protected:
     const Function & F;

@@ -14,8 +14,9 @@ $(TARGETS): %: %.cpp
 run: compile
 	@for target in $(TARGETS); do \
 		./$$target; \
-	clean
 	done
+	@echo "All targets have been executed."
+	clean
 
 run_test:
 	@for target in $(TARGETS); do \

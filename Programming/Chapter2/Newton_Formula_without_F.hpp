@@ -3,7 +3,7 @@
 #include<iostream>
 #include<vector>
 using namespace std;
-typedef unsigned long long size_t;
+
 class  Newton_formula_WF{
 protected:
     vector<vector<double>> interpolation_points;

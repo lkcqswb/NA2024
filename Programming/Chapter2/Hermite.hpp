@@ -4,7 +4,7 @@
 #include"Function.hpp"
 #include<vector>
 using namespace std;
-typedef unsigned long long size_t;
+
 
 double factorial(int n){
     double sum=1;
