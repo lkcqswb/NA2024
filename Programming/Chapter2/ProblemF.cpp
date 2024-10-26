@@ -67,7 +67,7 @@ int main(){
             outfile << result[0] << " " << result[1] << endl;
         }
         outfile << "#END# m=" <<m<< endl;
-        string command = "python plot2.py ProblemF.txt";
+        string command = "python3 plot2.py ProblemF.txt";
         system(command.c_str());
     }
     

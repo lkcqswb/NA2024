@@ -25,7 +25,7 @@ int main(){
     }
     outfile << "#END# Sp2" << endl;   
     cout<<"x represents time, and y represents weight."<<endl;
-    string command = "python plot.py ProblemE.txt";
+    string command = "python3 plot.py ProblemE.txt";
     system(command.c_str());
 
     cout << "Sp1 after another 15 days: average weight: " << New1.get_interpolation_value(43)  << endl;

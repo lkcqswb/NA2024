@@ -40,7 +40,7 @@ int main(){
     outfile << "#END#The Runge function itself"<< endl;
 
 
-    string command = "python plot.py ProblemB.txt";
+    string command = "python3 plot.py ProblemB.txt";
     system(command.c_str());
     return 0;
 }

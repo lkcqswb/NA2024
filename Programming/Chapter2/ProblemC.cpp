@@ -37,7 +37,7 @@ int main(){
     outfile << "#END#f itself"<< endl;
 
 
-    string command = "python plot.py ProblemC.txt";
+    string command = "python3 plot.py ProblemC.txt";
     system(command.c_str());
     return 0;
 }

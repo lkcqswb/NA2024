@@ -16,7 +16,7 @@ run: compile
 		./$$target; \
 	done
 	@echo "All targets have been executed."
-	clean
+	$(MAKE) clean 
 
 run_test:
 	@for target in $(TARGETS); do \
@@ -27,10 +27,10 @@ run_test:
 report: compile run_test report.pdf clean clean_picture
 
 report.pdf: report.tex
-	@pdflatex report.tex
+	@xelatex report.tex
 	@bibtex report
-	@pdflatex report.tex
-	@pdflatex report.tex
+	@xelatex report.tex
+	@xelatex report.tex
 
 clean:
 	rm -f $(TARGETS) report.aux report.log report.bbl report.blg report-blx.bib report.run.xml ProblemB ProblemC ProblemD ProblemE ProblemF ProblemB.txt ProblemC.txt ProblemD.txt ProblemE.txt ProblemF.txt report.synctex.gz
