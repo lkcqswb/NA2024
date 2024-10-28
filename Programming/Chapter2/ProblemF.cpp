@@ -45,7 +45,7 @@ Cubic_Bezier draw(int m){
 
 int main(){
     int m,i,j;
-    int m_to_paint[3]={10,40,60};
+    int m_to_paint[3]={10,40,160};
 
     for ( i = 0; i < 3; i++)
     {
