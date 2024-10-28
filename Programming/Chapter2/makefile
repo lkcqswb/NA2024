@@ -27,10 +27,10 @@ run_test:
 report: compile run_test report.pdf clean clean_picture
 
 report.pdf: report.tex
-	@xelatex report.tex
+	@pdflatex report.tex
 	@bibtex report
-	@xelatex report.tex
-	@xelatex report.tex
+	@pdflatex report.tex
+	@pdflatex report.tex
 
 clean:
 	rm -f $(TARGETS) report.aux report.log report.bbl report.blg report-blx.bib report.run.xml ProblemB ProblemC ProblemD ProblemE ProblemF ProblemB.txt ProblemC.txt ProblemD.txt ProblemE.txt ProblemF.txt report.synctex.gz

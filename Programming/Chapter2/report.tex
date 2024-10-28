@@ -1,6 +1,6 @@
 \documentclass[a4paper]{article}
 %\usepackage[affil-it]{authblk}
-\usepackage[backend=bibtex,style=numeric]{biblatex}
+%\usepackage[backend=bibtex]{biblatex}
 \usepackage{float}
 \usepackage{amsmath}
 \usepackage{geometry}
@@ -8,6 +8,7 @@
 \usepackage{caption}
 \usepackage{amssymb}
 \usepackage{booktabs}
+\usepackage[utf8]{inputenc}
 
 \geometry{margin=1.5cm, vmargin={0pt,1cm}}
 \setlength{\topmargin}{-1cm}
@@ -196,7 +197,7 @@ $p_n(x) = \sum_{k=0}^{n} a_k \pi_k(x)$ \\
 Taking the derivative gives $p_n^{'}(x) = \sum_{k=0}^{n} a_k\sum_{i=0}^{k-1}\prod_{j=0,j\neq i}^{k-1}(x - x_j)$ \\
 We just need to maintain an n-dimensional vector, and in the m-th round, the position n stores the product $\prod_{j=0,j\neq n}^{m}(x - x_j)$ \\
 Each time we take the elements from positions 0-m-1, sum them up, multiply by $a_m$, and accumulate them into the result variable result. After m+1 rounds, update this n-dimensional vector, except for the m+1th position, each position is multiplied by $(x-x_{m+1})$ \\
-The pseudocode is as follows：
+The pseudocode is as follows:
 \begin{verbatim}
     Function get_derivative_value(x)
     Input: x
@@ -224,7 +225,7 @@ Function update(value, x, iter)
 \textbf{Cubic\_Bezier.hpp's Cubic\_Bezier class} is used to construct suitable cubic polynomials on each interval of a two-dimensional image \\
 Assume a curve in the plane $R^D$ as $t (a,b)->R^D$.
 dimension=D \\
-Take m+1 points $t_i$,构成 a vector t, and a vector interpolation\_points corresponding to each $t_i$ as $P_i \in R^D$. \\
+Take m+1 points $t_i$ to form a vector t, and a vector interpolation\_points corresponding to each $t_i$ as $P_i \in R^D$. \\
 You also need to calculate the tangent vector on each $P_i$ and put it into the vector derivatives, noting that each element of derivatives is \\
 A left derivative value and a right derivative value corresponding to $P_i$, $\gamma(P_i^{-}),\gamma(P_i^{+})$, if it is on the boundary, the left derivative equals the right derivative (the left derivative does not exist) or the right derivative equals the left derivative (the right derivative does not exist) \\
 This setting is because in problem F, there is a case where the left derivative is not equal to the right derivative. \\
@@ -304,8 +305,7 @@ Use the formula $B(t) := \sum_{k=0}^{n} q_k b_{n,k}(t)$ \\
     \begin{figure}[H]
         \centering 
         \includegraphics[width=0.8\textwidth]{ProblemBplot.png} 
-        \caption{Plot for Problem B} 
-        \label{fig:example} 
+        \caption{Plot for Problem B}  
     \end{figure}
     Through the image, we can see that the interpolation polynomial and the Runge function differ greatly.\\
     
@@ -324,7 +324,6 @@ Use the formula $B(t) := \sum_{k=0}^{n} q_k b_{n,k}(t)$ \\
         \centering 
         \includegraphics[width=0.8\textwidth]{ProblemCplot.png} 
         \caption{Plot for Problem C} 
-        \label{fig:example} 
     \end{figure}
     Using Chebyshev polynomial zero points for interpolation can more effectively approximate this type of function\\
     
@@ -385,7 +384,6 @@ Use the formula $B(t) := \sum_{k=0}^{n} q_k b_{n,k}(t)$ \\
         \centering 
         \includegraphics[width=0.8\textwidth]{ProblemEplot.png} 
         \caption{average weight curve} 
-        \label{fig:example} 
     \end{figure}
     
     Use the polynomial to predict future weight \\
@@ -417,22 +415,21 @@ Use the formula $B(t) := \sum_{k=0}^{n} q_k b_{n,k}(t)$ \\
     Take m in turn, and obtain the curve, call the python function to draw. \
     The pictures are as follows \
     \begin{figure}[H]
-    \centering
-    \includegraphics[width=0.5\textwidth]{ProblemF_m=10_plot.png}
-    \caption{m=10}
-    \label{fig:example}
+        \centering
+        \includegraphics[width=0.5\textwidth]{ProblemF_m=10_plot.png}
+        \caption{m=10}
     \end{figure}
+    
     \begin{figure}[H]
-    \centering
-    \includegraphics[width=0.5\textwidth]{ProblemF_m=40_plot.png}
-    \caption{m=40}
-    \label{fig:example}
+        \centering
+        \includegraphics[width=0.5\textwidth]{ProblemF_m=40_plot.png}
+        \caption{m=40}
     \end{figure}
+
     \begin{figure}[H]
-    \centering
-    \includegraphics[width=0.5\textwidth]{ProblemF_m=160_plot.png}
-    \caption{m=160}
-    \label{fig:example}
+        \centering
+        \includegraphics[width=0.5\textwidth]{ProblemF_m=160_plot.png}
+        \caption{m=160}
     \end{figure}
     
     \section*{ \center{\normalsize {Acknowledgement}} }
