@@ -1,17 +1,15 @@
 {
     "dimension": 1,
-    "order": 3,
+    "order": 1,
     "boundary condition": {
         "equals": [],
-        "values": [],
-        "exists": [2,1]
+        "values": [[0,1,2,3],[0,0,0,0],[[1],[-2],[3],[4]]],
+        "exists": []
     },
-    "data points": [
+    "data points": 
         [0.0, 2.0, 4.0,9.0],
-        [[1.1], [-2.2], [-13.2],[10]]
-        ],
     "range": {
-        "end": 10,
+        "end": 9,
         "begin": 0
     }
 }

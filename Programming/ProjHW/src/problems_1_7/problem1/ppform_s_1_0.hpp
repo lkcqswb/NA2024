@@ -6,23 +6,19 @@ using namespace std;
 class ppform_1_0: public ppForm{
 private:
     vector<double> knots;
-    vector<vector<double>> f_values;  
     double start,end;
 public:
-    ppform_1_0(vector<double> i_knots,vector<vector<double>> i_f_values,double astart,double aend):ppForm({
-        {"dimension", 1},
-        {"order", 1},
-        {"boundary condition",{
-            {"values",{}},
-            {"equals",{}},
-            {"exists",{}}
-        }},
-        {"data points", {i_knots, i_f_values}},
-        {"range", {
-            {"end", aend},
-            {"start", astart}
-        }}
-    }),knots(i_knots),f_values(i_f_values),start(astart),end(aend){};
+    ppform_1_0(json j):ppForm(j){
+        if (!j["data points"].is_null()){
+                knots=j["data points"].get<vector<double>>();
+            if(knots.empty()||knots.size()<2) {cout<<"enadequate knots"<<endl; throw "enadequate datapoints";}
+        }else {cout<<"no datapoints"<<endl; throw "no datapoints";}
+        
+        if (!j["range"]["begin"].is_null()) start=j["range"]["begin"];
+        else start=knots[0];
+        if (!j["range"]["end"].is_null()) end=j["range"]["end"];
+        else end=knots[knots.size()-1];
+    };
     double get_value(double t){
         return ppForm::get_value(t)[0];
     }

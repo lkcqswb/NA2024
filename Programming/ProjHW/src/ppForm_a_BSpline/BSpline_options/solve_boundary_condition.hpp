@@ -51,6 +51,9 @@ vector<vector<double>> construct_derivatives_table(vector<vector<double>> value_
     int index=value_table[0].size()-1;
     Eigen::MatrixXd matrix=Eigen::MatrixXd::Zero(index+1, index+1);
     Eigen::MatrixXd coefficients=Eigen::MatrixXd::Identity(index+1, index+1);
+    
+    difftable.push_back(value_table[order]);//0阶导值
+
     for (int i = 0; i < order; i++)
     {
         Eigen::MatrixXd values(1,index+1);
@@ -75,33 +78,32 @@ vector<vector<double>> construct_derivatives_table(vector<vector<double>> value_
 
 
 
-vector<double> B_solve(int order,vector<double> knots,vector<double> f_values,vector<int> dots1,vector<int> difforder1,vector<int> dots2,vector<int> difforder2,vector<int> dots,vector<int> difforder,vector<double> value,vector<int> exist ){
+vector<double> B_solve(int order,vector<double> knots,vector<int> dots1,vector<int> difforder1,vector<int> dots2,vector<int> difforder2,vector<int> dots,vector<int> difforder,vector<double> value,vector<int> exist ){
     vector<vector<vector<double>>> value_table;
     int condition_numbers=dots1.size()+dots.size()+exist.size();//共额外条件数
     
 
-    if(condition_numbers<order-1){
+    if(condition_numbers<(int)knots.size()){
         cout<<"enadequate information"<<endl;
         throw "enadequate information";
     }
 
-    int offset=order-1;//索引order-1开始有对应的函数值
-    Eigen::MatrixXd matrix=Eigen::MatrixXd::Zero(condition_numbers+knots.size()-order+1, knots.size());
-    Eigen::VectorXd target(condition_numbers+knots.size()-order+1);
-    
-    
-    for (int i = offset; i < (int)knots.size(); i++)
+    int offset=order-1;//索引order-1开始为函数定义域
+
+    for (size_t i = offset; i < knots.size(); i++)
     {
         value_table.push_back(construct_value_table(knots,order,i,knots[i]));
-
-        for(int j=0;j<i+1;j++) matrix(i-offset,j)=value_table[i-offset][order][j];
-        target[i-offset]=f_values[i-offset];
     }
-    size_t line_index = knots.size()-offset;
+    
+    Eigen::MatrixXd matrix=Eigen::MatrixXd::Zero(condition_numbers, knots.size());
+    Eigen::VectorXd target(condition_numbers);
+    
+    
+    size_t line_index = 0;
     
     if(!dots.empty()){
         int i=0;
-        for (;line_index < dots.size()+knots.size()-order+1; line_index++) {
+        for (;line_index < dots.size(); line_index++) {
             double value_dimension=value[i];
             int dot=dots[i],difforders=difforder[i];
             if(dot<0||dot>(int)knots.size()-order){
@@ -115,9 +117,8 @@ vector<double> B_solve(int order,vector<double> knots,vector<double> f_values,ve
                 continue;
             }
             vector<vector<double>> derivation =construct_derivatives_table(value_table[dot],knots);
-            for (int j = 0; j < (int)derivation[0].size(); j++) {
-                matrix(line_index, j) = derivation[difforders-1][j];
-            }
+            for (int j = 0; j < (int)derivation[0].size(); j++) matrix(line_index, j) = derivation[difforders][j];
+
             //cout<<"ma:"<<matrix.row(line_index)<<endl;
             target(line_index) = value_dimension;
             i++;
@@ -125,7 +126,7 @@ vector<double> B_solve(int order,vector<double> knots,vector<double> f_values,ve
     }
     if(!dots1.empty()){
         int i=0;
-        for (; line_index < dots1.size()+dots.size()+knots.size()-order+1; line_index++) {
+        for (; line_index < dots1.size()+dots.size(); line_index++) {
             int dot1=dots1[i],difforders1=difforder1[i],dot2=dots2[i],difforders2=difforder2[i];
             if(dot1<0||dot1>(int)knots.size()-order||dot2<0||dot2>(int)knots.size()-order){
                 cout<<"no such point: "<<dot1<<" or "<<dot2<<endl;
@@ -139,24 +140,25 @@ vector<double> B_solve(int order,vector<double> knots,vector<double> f_values,ve
             }
             vector<vector<double>> derivation1 =construct_derivatives_table(value_table[dot1],knots);
             vector<vector<double>> derivation2 =construct_derivatives_table(value_table[dot2],knots);
-            for (int j = 0; j < (int)derivation1[0].size(); j++) matrix(line_index, j) += derivation1[difforders1-1][j];
-            for (int j = 0; j < (int)derivation2[0].size(); j++) matrix(line_index, j) -= derivation2[difforders2-1][j];
+            for (int j = 0; j < (int)derivation1[0].size(); j++) matrix(line_index, j) += derivation1[difforders1][j];
+            for (int j = 0; j < (int)derivation2[0].size(); j++) matrix(line_index, j) -= derivation2[difforders2][j];
             target(line_index) = 0;
             i++;
         }
     }
     if(!exist.empty()){
         int i=0;
-        for(;line_index<condition_numbers+knots.size()-order+1;line_index++){
+        for(;(int)line_index<condition_numbers;line_index++){
             int number=exist[i];
             if(number<1||number>(int)knots.size()-order-1){
                 cout<<"The "<<order<<"th derivative cannot exist at both ends, or out of range "<<endl;
+                i++;
                 continue;
             }
             vector<vector<double>> derivation1 =construct_derivatives_table(value_table[number],knots);
             vector<vector<double>> derivation2 =construct_derivatives_table(value_table[number+1],knots);
-            for (int j = 0; j < (int)derivation1[0].size(); j++) matrix(line_index, j) += derivation1[order-1][j];
-            for (int j = 0; j < (int)derivation2[0].size(); j++) matrix(line_index, j) -= derivation2[order-1][j];
+            for (int j = 0; j < (int)derivation1[0].size(); j++) matrix(line_index, j) += derivation1[order][j];
+            for (int j = 0; j < (int)derivation2[0].size(); j++) matrix(line_index, j) -= derivation2[order][j];
             target(line_index) = 0;
             i++;
         }

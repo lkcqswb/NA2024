@@ -36,40 +36,41 @@ vector<double> vec_minus(vector<double> x){
     return result;
 }
 
-double vec_get_solution(vector<double> x,Eigen::VectorXd solution,int order){
-    if((int)(x.size())!=order||(int)(solution.size())!=order-1){
-        cout<<"invalid shape"<<endl;
-        throw "invalid shape";
-    }
-    return x[0] + (Eigen::Map<const Eigen::VectorXd>(x.data() + 1, order - 1).dot(solution));
+double vec_get_solution(vector<double> x,Eigen::VectorXd solution){
+    return (Eigen::Map<const Eigen::VectorXd>(x.data(),x.size()).dot(solution));
 }
 
 
-vector<vector<double>> update_deri(vector<double>knots,vector<vector<double>> co_previous,int index,int order){
+vector<vector<double>> update_deri(vector<double>knots,vector<vector<double>> co_previous,int index,int order,int size){
     vector<vector<double>> t_now;
     vector<vector<double>> co_pre=co_previous;
+    //0阶导数
+    vector<double> t_0(size,0);
+    for (int k = 0; k <=order; k++) t_0=vec_add(t_0,num_product(co_pre[k],pow(knots[index]-knots[index-1],k)));
+    t_now.push_back(t_0);
+
     for (int j = 1; j < order; j++)//从1阶导数到n-1阶导数。
         {
-            vector<double> t_i(order,0);
+            vector<double> t_i(size,0);
             for (int k = j; k <=order; k++)
             {
-                co_pre[k-1]=num_product(co_pre[k-1],(k+1-j));//对每一项进行求导。
+                co_pre[k]=num_product(co_pre[k],(k+1-j));//对每一项进行求导。
             }
-            for (int k = j-1; k < order; k++) t_i=vec_add(t_i,num_product(co_pre[k],pow(knots[index]-knots[index-1],k+1-j)));
+            for (int k = j; k <=order; k++) t_i=vec_add(t_i,num_product(co_pre[k],pow(knots[index]-knots[index-1],k-j)));
             t_now.push_back(t_i);
     }
     return t_now;
 }
 
-vector<vector<double>> update_coefficent(vector<double> factorial_index,vector<double>knots,vector<vector<double>> t_now,vector<double> f_values,int index,int order){
+vector<vector<double>> update_coefficent(vector<double> factorial_index,vector<double>knots,vector<vector<double>> t_now,int index,int order,int size){
     vector<vector<double>> co_now;
-    for (int j = 1; j < order; j++)//从第一项到n-1项系数。
+    for (int j = 0; j < order; j++)//从第0次项到n次项系数。
     {
-        co_now.push_back(num_product(t_now[j-1],(double)(1)/factorial_index[j]));
+        co_now.push_back(num_product(t_now[j],(double)(1)/factorial_index[j]));
     }
-    vector<double> last_coef(order,0);//第n项系数需要单独计算
-    last_coef[0]=(f_values[index+1]-f_values[index])/(knots[index+1]-knots[index]);
-    for (int i = 1; i < order; i++) last_coef=num_product(vec_add(last_coef,vec_minus(co_now[i-1])),1/(knots[index+1]-knots[index]));
+    vector<double> last_coef(size,0);//第n项系数需要单独计算
+    last_coef[index+1]=(double)1;
+    for (int i = 0; i < order; i++) last_coef=num_product(vec_add(last_coef,vec_minus(co_now[i])),1/(knots[index+1]-knots[index]));
     co_now.push_back(last_coef);
     return co_now;
 }
@@ -77,7 +78,7 @@ vector<vector<double>> update_coefficent(vector<double> factorial_index,vector<d
 
 
 
-vector<vector<double>> pp_solve(int order,vector<double> knots,vector<double> f_values,vector<int> dots1,vector<int> difforder1,vector<int> dots2,vector<int> difforder2,vector<int> dots,vector<int> difforder,vector<double> value,vector<int> exist){
+vector<vector<double>> pp_solve(int order,vector<double> knots,vector<int> dots1,vector<int> difforder1,vector<int> dots2,vector<int> difforder2,vector<int> dots,vector<int> difforder,vector<double> value,vector<int> exist){
 
     int condition_numbers=dots1.size()+dots.size()+exist.size();//共额外条件数
 
@@ -85,6 +86,7 @@ vector<vector<double>> pp_solve(int order,vector<double> knots,vector<double> f_
         cout<<"enadequate information"<<endl;
         throw "enadequate information";
     }
+    /*
     if(order==1){
         vector<vector<double>> result;
         for (size_t i=0;i<knots.size()-1;i++){
@@ -92,36 +94,37 @@ vector<vector<double>> pp_solve(int order,vector<double> knots,vector<double> f_
         }
         return result;
     }
-
+    */
     vector<double> factorial_index(1,1);
     for (int i = 1; i < order; i++) factorial_index.push_back(i*factorial_index[i-1]);//存储1到n-1的阶乘，免于后续反复计算。
+    int result_size=knots.size()+order-1;
+    int N=knots.size();
+    vector<vector<vector<double>>> deriv_co;//存储t1-tn对应点的0-(n-1)阶导数
+    vector<vector<vector<double>>> coeff;//存储(t1,t2)-(t_{n-1},t_{n})对应点的0-(n)次系数
 
-
-
-    vector<vector<vector<double>>> deriv_co;//存储t1-tn对应点的1-(n-1)阶导数
-    vector<vector<vector<double>>> coeff;//存储(t1,t2)-(t_{n-1},t_{n})对应点的1-(n)次系数
-
-
-    vector<vector<double>> t_0;;//(t1处的1阶导数到n-1阶导数)
-    for (int i = 1; i < order; i++)
+    //张量运算，设置每个元素为(f_0,f_1...f_{N-1},m_1,m_2..m_{n-1})对应系数。 m_i为第一个结点i阶导数值，f_i为第i个节点函数值。
+    vector<vector<double>> t_0;;//(t1处的0阶导数到n-1阶导数)
+    for (int i = 0; i < order; i++)
     {
-        vector<double> deri(order,0);//i阶导数
-        deri[i]=1;
+        vector<double> deri(result_size,0);//i阶导数
+        if(i==0) deri[0]=1;
+        else deri[N-1+i]=1;
         t_0.push_back(deri);
     }
+    
     deriv_co.push_back(t_0);
-    coeff.push_back(update_coefficent(factorial_index,knots,t_0,f_values,0,order));//计算第一个区间对应的系数
+    coeff.push_back(update_coefficent(factorial_index,knots,t_0,0,order,result_size));//计算第一个区间对应的系数
 
     for (size_t i = 1; i < knots.size()-1; i++)//一个个区间更新下去
     {
-        deriv_co.push_back(update_deri(knots,coeff[i-1],(int)i,order));//上一个区间的系数，用于计算这个区间右侧点的导数
-        coeff.push_back(update_coefficent(factorial_index,knots,deriv_co[i],f_values,i,order));//这个区间的导数计算下个区间的系数
+        deriv_co.push_back(update_deri(knots,coeff[i-1],(int)i,order,result_size));//上一个区间的系数，用于计算这个区间右侧点的导数
+        coeff.push_back(update_coefficent(factorial_index,knots,deriv_co[i],i,order,result_size));//这个区间的导数计算下个区间的系数
     }
-    deriv_co.push_back(update_deri(knots,coeff[coeff.size()-1],(int)(knots.size()-1),order));//计算最右端点的导数
+    deriv_co.push_back(update_deri(knots,coeff[coeff.size()-1],(int)(knots.size()-1),order,result_size));//计算最右端点的导数
 
 
     //构建方程
-    Eigen::MatrixXd matrix=Eigen::MatrixXd::Zero(condition_numbers, order - 1);
+    Eigen::MatrixXd matrix=Eigen::MatrixXd::Zero(condition_numbers, result_size);
     Eigen::VectorXd target(condition_numbers);
 
     size_t line_index=0;
@@ -140,11 +143,11 @@ vector<vector<double>> pp_solve(int order,vector<double> knots,vector<double> f_
                 i++;
                 continue;
             }
-            vector<double> derivation = deriv_co[dot][difforders - 1];
-            for (int j = 1; j < order; j++) {
-                matrix(line_index, j - 1) = derivation[j];
+            vector<double> derivation = deriv_co[dot][difforders];
+            for (int j = 0; j < result_size; j++) {
+                matrix(line_index, j) = derivation[j];
             }
-            target(line_index) = value_dimension - derivation[0];
+            target(line_index) = value_dimension;
             i++;
         }
     }
@@ -162,11 +165,11 @@ vector<vector<double>> pp_solve(int order,vector<double> knots,vector<double> f_
                 i++;
                 continue;
             }
-            vector<double> derivation1 = deriv_co[dot1][difforders1 - 1];
-            vector<double> derivation2 = deriv_co[dot2][difforders2 - 1];
-            for (int j = 1; j < (int)derivation1.size(); j++) matrix(line_index, j-1) += derivation1[j];
-            for (int j = 1; j < (int)derivation2.size(); j++) matrix(line_index, j-1) -= derivation2[j];
-            target(line_index) =derivation2[0]-derivation1[0] ;
+            vector<double> derivation1 = deriv_co[dot1][difforders1];
+            vector<double> derivation2 = deriv_co[dot2][difforders2];
+            for (int j = 0; j < (int)derivation1.size(); j++) matrix(line_index, j) += derivation1[j];
+            for (int j = 0; j < (int)derivation2.size(); j++) matrix(line_index, j) -= derivation2[j];
+            target(line_index) =0;
             i++;
         }
     }
@@ -176,23 +179,18 @@ vector<vector<double>> pp_solve(int order,vector<double> knots,vector<double> f_
             int number=exist[i];
             if(number<1||number>(int)knots.size()-2){
                 cout<<"The "<<order<<"th derivative cannot exist at both ends, or out of range "<<endl;
+                i++;
                 continue;
             }
-            vector<double> derivation1 =coeff[number][order-1];//右n阶导数为以该点起始区间n次系数乘上n!
-            vector<double> derivation2 =coeff[number-1][order-1];//左n阶导数为商议区间n次系数乘上n!
-            for (int j = 1; j < (int)derivation1.size(); j++) matrix(line_index, j-1) += derivation1[j];
-            for (int j = 1; j < (int)derivation2.size(); j++) matrix(line_index, j-1) -= derivation2[j];
-            target(line_index) = derivation2[0]-derivation1[0];
+            vector<double> derivation1 =coeff[number][order];//右n阶导数为以该点起始区间n次系数乘上n!
+            vector<double> derivation2 =coeff[number-1][order];//左n阶导数为商议区间n次系数乘上n!
+            for (int j = 0; j < (int)derivation1.size(); j++) matrix(line_index, j) += derivation1[j];
+            for (int j = 0; j < (int)derivation2.size(); j++) matrix(line_index, j) -= derivation2[j];
+            target(line_index) = 0;
             i++;
         }
 
     }
-
-
-
-
-
-
 
 
 
@@ -207,8 +205,8 @@ vector<vector<double>> pp_solve(int order,vector<double> knots,vector<double> f_
 
     vector<vector<double>> result;
     for (size_t i=0;i<coeff.size();i++){
-        vector<double> temp={f_values[i]};
-        for(int j=0;j<order;j++) temp.push_back(vec_get_solution(coeff[i][j],solution,order));
+        vector<double> temp;
+        for(int j=0;j<=order;j++) temp.push_back(vec_get_solution(coeff[i][j],solution));
         result.push_back(temp);
     }
 

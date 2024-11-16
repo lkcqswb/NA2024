@@ -1,0 +1,15 @@
+{
+    "files.associations": {
+        "vector": "cpp",
+        "iosfwd": "cpp",
+        "deque": "cpp",
+        "format": "cpp",
+        "list": "cpp",
+        "xstring": "cpp",
+        "utility": "cpp",
+        "chrono": "cpp",
+        "algorithm": "cpp",
+        "xiosbase": "cpp",
+        "iostream": "cpp"
+    }
+}

@@ -29,26 +29,16 @@ ppForm::ppForm(json j)
     //检查输入的json是否合法
     if (!j["dimension"].is_null()) dimension=j["dimension"];
     if (!j["order"].is_null()) order=j["order"];
-    vector<vector<double>> f_values;
     if (!j["data points"].is_null()){
-        knots=j["data points"][0].get<vector<double>>();
+        knots=j["data points"].get<vector<double>>();
         if(knots.empty()||knots.size()<2) {cout<<"enadequate knots"<<endl; throw "enadequate datapoints";}
-        f_values=j["data points"][1].get<vector<vector<double>>>();
-        if(knots.size()!=f_values.size()) {cout<<"illegal shape"<<endl; throw "illegal shape";}
-        for(auto &item:f_values){if((int)item.size()<dimension){cout<<"illegal shape"<<endl; throw "illegal shape";}}//如果函数值不符合维数要求
     }else {cout<<"no datapoints"<<endl; throw "no datapoints";}
+    
     //对结点排序
-    vector<pair<double, vector<double>>> pairs;
-    for (size_t i = 0; i < knots.size(); ++i) {
-        pairs.push_back(make_pair(knots[i], f_values[i]));
-    }
-    sort(pairs.begin(), pairs.end(), [](const std::pair<double, vector<double>>& a, const std::pair<double, vector<double>>& b) {
-        return a.first < b.first;
+    sort(knots.begin(), knots.end(), [](const double& a, const double& b) {
+        return a < b;
         });
-    for (size_t i = 0; i < pairs.size(); ++i) {
-        knots[i] = pairs[i].first;
-        f_values[i] = pairs[i].second;
-    }
+
     //排序结束
 
 
@@ -60,8 +50,8 @@ ppForm::ppForm(json j)
     //结束检查
     
     for(int cur_dimen=0;cur_dimen<dimension;cur_dimen++){
-        vector<double> f_value_dimension;
-        for(size_t j=0;j<knots.size();j++) f_value_dimension.push_back(f_values[j][cur_dimen]);//该维度的所有函数值
+
+
              
         vector<int> dots1={},dots2={},difforder1={},difforder2={};
         
@@ -119,7 +109,7 @@ ppForm::ppForm(json j)
             if(!ex.empty()) exist_dot=ex.get<vector<int>>();
         }
         
-        coef.push_back(pp_solve(order,knots,f_value_dimension,dots1,difforder1,dots2,difforder2,dots,difforder,values_dimension,exist_dot));
+        coef.push_back(pp_solve(order,knots,dots1,difforder1,dots2,difforder2,dots,difforder,values_dimension,exist_dot));
     }
     
 

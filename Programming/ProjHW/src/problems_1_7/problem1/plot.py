@@ -1,5 +1,6 @@
 import sys
 import matplotlib.pyplot as plt
+import os
 
 def read_points(file_name):
     points = []
@@ -12,7 +13,7 @@ def read_points(file_name):
         print(f"Error reading file: {e}")
     return points
 
-def plot_points(points):
+def plot_points(points,title):
     if not points:
         print("No points to plot.")
         return
@@ -23,6 +24,7 @@ def plot_points(points):
     # 绘制点
     plt.scatter(x, y, color='blue')
     plt.title('Scatter Plot of Points')
+    plt.title(title)
     plt.xlabel('X-axis')
     plt.ylabel('Y-axis')
     plt.grid()
@@ -37,4 +39,5 @@ if __name__ == "__main__":
 
     file_name = sys.argv[1]
     points = read_points(file_name)
-    plot_points(points)
+    title = os.path.splitext(file_name)[0]
+    plot_points(points,title)
