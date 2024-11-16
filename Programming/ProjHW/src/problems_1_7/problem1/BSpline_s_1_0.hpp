@@ -1,0 +1,34 @@
+#include "../../include/json.hpp"
+#include "../../ppForm_a_BSpline/BSpline.hpp"
+using json = nlohmann::json;
+using namespace std;
+
+class BSpline_1_0: public BSpline{
+private:
+    vector<double> knots;
+    vector<vector<double>> f_values;  
+    double start,end;
+public:
+    BSpline_1_0(vector<double> i_knots,vector<vector<double>> i_f_values,double astart,double aend):BSpline({
+        {"dimension", 1},
+        {"order", 1},
+        {"boundary condition",{
+            {"values",{}},
+            {"equals",{}},
+            {"exists",{}}
+        }},
+        {"data points", {i_knots, i_f_values}},
+        {"range", {
+            {"end", aend},
+            {"start", astart}
+        }}
+    }),knots(i_knots),f_values(i_f_values),start(astart),end(aend){};
+    double get_value(double t){
+        return BSpline::get_value(t)[0];
+    }
+};
+
+
+
+
+
