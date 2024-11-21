@@ -1,0 +1,14 @@
+{
+    "order": 3,
+    "boundary condition": {
+        "equals": [],
+        "values": [],
+        "exists": [1,2]
+    },
+    "points": 
+        [[0,2],[ 2,7],[ 4,4],[9,10]],
+    "range":{
+        "begin":0,
+        "end":1
+    }
+}

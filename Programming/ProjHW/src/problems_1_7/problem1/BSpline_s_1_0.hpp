@@ -1,3 +1,4 @@
+#pragma once
 #include "../../include/json.hpp"
 #include "../../ppForm_a_BSpline/BSpline.hpp"
 using json = nlohmann::json;

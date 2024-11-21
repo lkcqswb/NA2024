@@ -1,25 +1,10 @@
+#pragma once
 #include "../../include/json.hpp"
 #include "../../ppForm_a_BSpline/BSpline.hpp"
 #include<vector>
 using json = nlohmann::json;
 using namespace std;
 
-vector<int> generate_seq(int n){
-    vector<int> result;
-    for (size_t i = 0; i < n; i++)
-    {
-        result.push_back(i);
-    }
-    return result;
-}
-vector<vector<double>> generate_func_value(vector<double> f_values){
-    vector<vector<double>> result;
-    for (size_t i = 0; i < f_values.size(); i++)
-    {
-        result.push_back({f_values[i]});
-    }
-    return result;
-}
 
 
 
@@ -28,6 +13,23 @@ private:
     vector<double> knots; 
     double start,end;
     vector<int> dir,dot;
+    vector<int> generate_seq(int n){
+        vector<int> result;
+        for (size_t i = 0; i < n; i++)
+        {
+            result.push_back(i);
+        }
+        return result;
+    }
+    vector<vector<double>> generate_func_value(vector<double> f_values){
+        vector<vector<double>> result;
+        for (size_t i = 0; i < f_values.size(); i++)
+        {
+            result.push_back({f_values[i]});
+        }
+        return result;
+    }
+
 public:
     BSpline_2_3_periodic(vector<double>input_knots,vector<double> f_values,double istart,double iend):
     BSpline({

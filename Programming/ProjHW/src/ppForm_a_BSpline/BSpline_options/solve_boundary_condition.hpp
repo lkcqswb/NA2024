@@ -4,9 +4,37 @@
 #include"../../include/Eigen/Dense"
 using namespace std;
 double get_ti(int index,vector<double> knots){
-    if(index<0) return knots[0]+index;
+    double interval=(knots[knots.size()-1]-knots[0])/knots.size();
+    if(index<0) return knots[0]+index*interval;
     if(index<=(int)knots.size()-1) return knots[index];
-    else return knots[knots.size()-1]-knots.size()+1+index;
+    else return knots[knots.size()-1]+(-knots.size()+1+index)*interval;
+}
+void process_lines_1(Eigen::MatrixXd& A, Eigen::VectorXd& b) {
+    int m = A.rows();  
+    int n = A.cols(); 
+
+    for (int k = 0; k <= std::min(m, n) - 1; ++k) {
+        // 找到当前列最大元素
+        int maxRow = k;
+        for (int i = k + 1; i < m; ++i) {
+            if (fabs(A(i, k)) > fabs(A(maxRow, k))) {
+                maxRow = i;
+            }
+        }
+        if (maxRow != k) {
+            A.row(k).swap(A.row(maxRow));
+            std::swap(b(k), b(maxRow));
+        }
+        double max_obj=0;
+        for (int i = 0; i < n; i++)
+        {
+            if(fabs(A(k,i))>max_obj) max_obj=fabs(A(k,i));
+        }
+        if(max_obj>0){
+            A.row(k)/=max_obj;
+            b[k]/=max_obj;
+        }
+    }
 }
 
 int max(int x,int y){
@@ -76,7 +104,9 @@ vector<vector<double>> construct_derivatives_table(vector<vector<double>> value_
     return difftable;
 }
 
-
+void regularizeMatrix(Eigen::MatrixXd& matrix, double lambda) {
+    matrix += lambda * Eigen::MatrixXd::Identity(matrix.rows(), matrix.cols());
+}
 
 vector<double> B_solve(int order,vector<double> knots,vector<int> dots1,vector<int> difforder1,vector<int> dots2,vector<int> difforder2,vector<int> dots,vector<int> difforder,vector<double> value,vector<int> exist ){
     vector<vector<vector<double>>> value_table;
@@ -166,14 +196,16 @@ vector<double> B_solve(int order,vector<double> knots,vector<int> dots1,vector<i
     }
 
 
-
+    process_lines_1(matrix,target);
     Eigen::FullPivLU<Eigen::MatrixXd> lu_decomp(matrix);
-    if(lu_decomp.rank()<(int)knots.size()){
-        cout<<"There isn't unique solution"<<endl;
-        throw "There isn't unique solution";
+
+    
+    if(lu_decomp.rank()< (int)knots.size()){
+        cout<<"There isn't unique solution,rank:"<<lu_decomp.rank()<<endl;
+        cout<<"It may be due to the choice of conditions that leads to near-singularity."<<endl;
     }
+
     Eigen::VectorXd solution = matrix.colPivHouseholderQr().solve(target);
     vector<double> result(solution.data(), solution.data() + solution.size());
-    //cout<<"sol:"<<solution<<endl;
     return result;
 }

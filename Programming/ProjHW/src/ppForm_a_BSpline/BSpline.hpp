@@ -14,8 +14,9 @@ using json = nlohmann::json;
 class BSpline
 {
 private:
-    vector<double> knots;
+    vector<double> knots,new_knots;
     vector<vector<double>> coef;
+    double interval;
     int order,offset;
     int dimension;
     double begin,end;
@@ -40,17 +41,20 @@ BSpline::BSpline(json j)
         if(knots.empty()||knots.size()<2) {cout<<"enadequate knots"<<endl; throw "enadequate datapoints";}
     }else {cout<<"no datapoints"<<endl; throw "no datapoints";}
     
-    //对结点排序
-
+     //对结点排序
     sort(knots.begin(), knots.end(), [](const double& a, const double& b) {
         return a < b;
         });
 
     //排序结束
 
+    //增加结点
+    interval = (knots[knots.size()-1]-knots[0])/(knots.size()-1);
     vector<double> add_knots={};
-    for (size_t i = order-1; i >0; i--) add_knots.push_back(knots[0]-i);
+    for (size_t i = order-1; i >0; i--) add_knots.push_back(knots[0]-i*interval);
     knots.insert(knots.begin(), add_knots.begin(), add_knots.end());
+
+    
     
     //json boundary_conditions;
     //if (!j["boundary condition"].is_null()) boundary_conditions = j["boundary condition"];
@@ -61,6 +65,12 @@ BSpline::BSpline(json j)
     else end=knots[knots.size()-1];
     //结束检查
 
+    //缩放结点
+    new_knots={};
+    for (size_t i = 0; i < knots.size(); i++)
+    {
+        new_knots.push_back(knots[i]/interval);
+    }
 
     for(int cur_dimen=0;cur_dimen<dimension;cur_dimen++){
             
@@ -110,7 +120,7 @@ BSpline::BSpline(json j)
             if(!value.empty()){
                 for (size_t j=0;j<value.size();j++){
                     if((int)value[j].size()<dimension) {cout<<"Lack of complete dimensional information!";throw"Lack of complete dimensional information!";}//检查n阶导数维度
-                    values_dimension.push_back(value[j][cur_dimen]);//n阶导值,0为函数值
+                    values_dimension.push_back(value[j][cur_dimen]*pow(interval,difforder[j]));//n阶导值,0为函数值
                 }
             }
 
@@ -120,7 +130,7 @@ BSpline::BSpline(json j)
             if(!ex.empty()) exist_dot=ex.get<vector<int>>();
         }
         
-        coef.push_back(B_solve(order,knots,dots1,difforder1,dots2,difforder2,dots,difforder,values_dimension,exist_dot));
+        coef.push_back(B_solve(order,new_knots,dots1,difforder1,dots2,difforder2,dots,difforder,values_dimension,exist_dot));
     }
     
 
@@ -130,7 +140,7 @@ BSpline::BSpline(json j)
 vector<double> BSpline::get_value(double x){
     int i;
     if(x>knots[knots.size()-1]||x<knots[order-1]||x<begin||x>end){
-        cout<<"out of range"<<endl;
+        cout<<x<<" is out of range"<<endl;
         throw "out of range";
     }
     if(x==knots[order-1]){//和ppform统一定义域
@@ -142,7 +152,8 @@ vector<double> BSpline::get_value(double x){
             if(x>knots[i]) break;
         }
     }
-    vector<vector<double>> B= construct_value_table(knots,order,i+1,x);
+    x/=interval;
+    vector<vector<double>> B= construct_value_table(new_knots,order,i+1,x);
     vector<double> result;
     for (int k = 0; k < dimension; k++)
     {
