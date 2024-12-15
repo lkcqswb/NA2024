@@ -11,7 +11,6 @@
 #include <algorithm>
 using namespace std;
 using json = nlohmann::json;
-
 class ppForm
 {
 private:
@@ -23,12 +22,13 @@ private:
     int dimension;
 public:
     int version;
-    ppForm(json j,int version);
+    ppForm(json j,int version=1);
     ~ppForm();
     vector<double> get_value(double x);
 };
 
-ppForm::ppForm(json j,int version=1)
+
+ppForm::ppForm(json j,int version)
 {
     
     //检查输入的json是否合法

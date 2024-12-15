@@ -287,7 +287,6 @@ public:
         vector<double> boundary_values=j["boundary_values"].get<vector<double>>();
 
         Eigen::MatrixXd m=Eigen::MatrixXd::Zero(knots.size(),knots.size());
-        interval = (knots[knots.size()-1]-knots[0])/(knots.size()-1);
 
         for (size_t i = 0; i < knots.size(); i++)
         {
@@ -304,6 +303,7 @@ public:
             }
         }
         Eigen::VectorXd target(knots.size());
+
         for (size_t i = 0; i < knots.size(); i++)
         {
             if(i==0){
@@ -330,31 +330,29 @@ public:
         else end=knots[knots.size()-1];
          //增加结点
 
-        double interval = (knots[knots.size()-1]-knots[0])/(knots.size()-1);
-        knots.insert(knots.begin(), knots[0]-interval);
-        knots.push_back(knots[knots.size()-1]+interval);
         for (size_t i = 0; i < knots.size(); i++)
         {
-            new_knots.push_back(knots[i]/interval);
+            new_knots.push_back(knots[i]-1.5);
         }
+        new_knots.push_back(knots[knots.size()-1]-0.5);
+        new_knots.push_back(knots[knots.size()-1]+0.5);
 
     }
     double get_value(double x){
         int i;
-        if(x>knots[knots.size()-2]||x<knots[1]||x<begin||x>end){
+        if(x>new_knots[new_knots.size()-1]||x<new_knots[0]||x<begin||x>end){
             cout<<x<<" is out of range"<<endl;
             throw "out of range";
         }
-        if(x==knots[1]){
-            i=1;
+        if(x==new_knots[0]){
+            i=0;
         }
         else{
-            for (i = knots.size()-2; i >=1; i--)
+            for (i = new_knots.size()-1; i >=0; i--)
             {
-                if(x>knots[i]) break;
+                if(x>new_knots[i]) break;
             }
         }
-        x/=interval;
         vector<vector<double>> B= construct_value_table(new_knots,2,i+1,x);
         double sum=0;
             for (int j = 0; j <=i+1; j++)

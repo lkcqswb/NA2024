@@ -61,6 +61,7 @@ def plot_points(points, title, center, radius):
     plot_sphere(ax, center, radius)
 
     # 显示图形
+
     plt.savefig(title+".png")
 
 if __name__ == "__main__":

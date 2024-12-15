@@ -27,7 +27,7 @@ def read_data(filename):
 def plot_data(file_name):
     x_vals, y_vals, labels = read_data(file_name)
     for i in range(len(x_vals)):
-        plt.plot(x_vals[i], y_vals[i], label=labels[i], marker='o')
+        plt.plot(x_vals[i], y_vals[i], label=labels[i], marker='o',linestyle='None', markersize=5,alpha=0.5)
     
     plt.xlabel('X')
     plt.ylabel('Y')

@@ -28,8 +28,8 @@ int main(){
             {"values",value2},
             {"boundary_values",{f(-5),f(5)}},
             {"range", {
-                {"end", 4.5},
-                {"begin", -4.5}
+                {"end", 5},
+                {"begin", -5}
             }}
         };
     

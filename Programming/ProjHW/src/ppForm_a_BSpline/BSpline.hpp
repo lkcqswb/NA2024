@@ -11,6 +11,9 @@
 using namespace std;
 using json = nlohmann::json;
 
+using namespace std;
+using json = nlohmann::json;
+
 class BSpline
 {
 private:
@@ -27,7 +30,6 @@ public:
     vector<double> get_value(double x);
     
 };
-
 
 BSpline::BSpline(json j)
 {
@@ -170,4 +172,5 @@ BSpline::~BSpline()
 {
     
 }
+
 #endif

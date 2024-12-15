@@ -1,6 +1,6 @@
-#include "ppForm_2_3_periodic.hpp"
-#include "ppForm_2_3_complete.hpp"
-#include "ppForm_2_3_natural.hpp"
+#include "ppform_2_3_periodic.hpp"
+#include "ppform_2_3_complete.hpp"
+#include "ppform_2_3_natural.hpp"
 #include "ppform_2_3_not_a_knot.hpp"
 #include "ppform_2_3_specific_2_deri.hpp"
 #include<iostream>

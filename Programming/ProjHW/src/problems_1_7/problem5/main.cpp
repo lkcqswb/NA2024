@@ -2,6 +2,7 @@
 #include "../../ppForm_a_BSpline/BSpline.hpp"
 #include<vector>
 #include<string>
+#include<fstream>
 using json = nlohmann::json;
 using namespace std;
 

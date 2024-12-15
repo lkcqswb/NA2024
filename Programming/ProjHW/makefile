@@ -2,55 +2,46 @@
 
 # 编译器和编译选项
 CXX = g++
-CXXFLAGS = -std=c++11 -I./src
+CXXFLAGS = -O2 -Wall
 
-# LaTeX 编译器
-LATEX = pdflatex
-
-# 源文件和目标文件
+# 目录
 SRC_DIR = src
-OBJ_DIR = obj
-DOC_DIR = doc
+PROBLEMS_DIR = $(SRC_DIR)/problems_in_chapter3
+BONUS_DIR = $(SRC_DIR)/bonus
 
-# 所有 cpp 文件
-CPP_FILES = $(wildcard $(SRC_DIR)/**/*.cpp)
-OBJ_FILES = $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(CPP_FILES))
-
-# main.cpp 文件
-MAIN_FILES = $(wildcard $(SRC_DIR)/problems_1_7/*/main.cpp)
-MAIN_EXECUTABLES = $(patsubst $(SRC_DIR)/problems_1_7/%/main.cpp,$(SRC_DIR)/problems_1_7/%/main,$(MAIN_FILES))
-
-# 头文件
-HEADER_FILES = $(wildcard $(SRC_DIR)/ppForm_a_BSpline/*.hpp)
-
-# 文档
-REPORT = $(DOC_DIR)/report.tex
+# 可执行文件
+PROBLEMS_EXEC = problem1/main problem2/main problem3/main problem4/main problem5/main problem6/main problem7/main
+CHAPTER3_EXEC = ProblemA ProblemC ProblemD ProblemE ProblemF
+BONUS_EXEC = convergencerate
 
 # 默认目标
-all: $(OBJ_FILES) $(MAIN_EXECUTABLES)
+all: pardo report
 
-# 编译头文件（只需编译一次）
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
-	@mkdir -p $(OBJ_DIR)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+# 编译并运行每个问题目录
+pardo: $(PROBLEMS_EXEC) $(CHAPTER3_EXEC) $(BONUS_EXEC)
 
-# 编译每个 main
-$(SRC_DIR)/problems_1_7/%/main: $(OBJ_FILES) $(SRC_DIR)/problems_1_7/%/main.cpp
-	$(CXX) $(CXXFLAGS) $< -o $@ $(OBJ_FILES)
+# 编译每个问题的可执行文件
+$(PROBLEMS_EXEC): %: $(SRC_DIR)/problems_in_chapter3/problems%/main.cpp
+	$(CXX) $(CXXFLAGS) -o $@ $< && ./$@
 
-# 编译 LaTeX 文档
-$(DOC_DIR)/report.pdf: $(REPORT)
-	$(LATEX) $<
+$(CHAPTER3_EXEC): %: $(PROBLEMS_DIR)/Problem%.cpp
+	$(CXX) $(CXXFLAGS) -o $@ $< && ./$(CHAPTER3_EXEC)
 
-# 运行可执行文件
-run: $(MAIN_EXECUTABLES)
-	@for exe in $(MAIN_EXECUTABLES); do \
-		echo "Running $$exe:"; \
-		$$exe; \
-	done
+# 编译 bonus
+$(BONUS_EXEC): $(BONUS_DIR)/convergencerate.cpp
+	$(CXX) $(CXXFLAGS) -o $@ $< && ./$(BONUS_EXEC)
+
+# 编译文档
+report:
+	cd doc && pdflatex report.tex
+	cd doc && @bibtex report
+	cd doc && @pdflatex report.tex
+	cd doc && @pdflatex report.tex
 
 # 清理目标
 clean:
-	rm -rf $(OBJ_DIR) $(SRC_DIR)/problems_1_7/*/main $(DOC_DIR)/report.pdf
+	rm -f $(SRC_DIR)/*/main $(SRC_DIR)/problems_in_chapter3/* $(BONUS_DIR)/convergencerate
+	rm -f $(SRC_DIR)/*/*.o $(SRC_DIR)/*/*.txt $(SRC_DIR)/*/*.png
+	rm -f doc/*.aux doc/*.log doc/*.pdf
 
-.PHONY: all clean run
+.PHONY: all pardo report clean

@@ -170,7 +170,6 @@ vector<vector<double>> pp_solve_3(int order,vector<double> input_knots,vector<in
   
     
     process_lines(matrix,target);
-    cout<<matrix;
 
     Eigen::FullPivLU<Eigen::MatrixXd> lu_decomp(matrix);
     if(lu_decomp.rank()<result_size){

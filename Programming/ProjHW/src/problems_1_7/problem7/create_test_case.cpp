@@ -10,8 +10,8 @@ std::vector<std::vector<double>> generateSphericalSpiral(int num_points, double 
     std::vector<std::vector<double>> points;
     
     for (size_t i = 0; i < num_points; ++i) {
-        double theta = i * (2 * pi / 15); 
-        double phi = (pi / height) * i; 
+        double theta = i * (2 * 2.0 / 15); 
+        double phi = (2.0 / height) * i; 
 
         double x = radius * sin(phi) * cos(theta);
         double y = radius * sin(phi) * sin(theta);
@@ -33,7 +33,7 @@ int main() {
     //{
     //    points.push_back({cos(i),sin(i)*cos(2*i-1),sin(i)*sin(2*i-1)});
     //}
-    points = generateSphericalSpiral(100, 30, radius);
+    points = generateSphericalSpiral(100, 20, radius);
 
     json j;
     j["order"] = 3;
