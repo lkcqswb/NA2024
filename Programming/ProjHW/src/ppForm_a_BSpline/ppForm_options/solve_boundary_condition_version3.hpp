@@ -22,7 +22,10 @@ Eigen::MatrixXd update_coefficent_new(vector<vector<long long>>C,vector<double>k
     double delta=knots[index]-knots[index-1],delta2=knots[index+1]-knots[index];
     Eigen::VectorXd c0(size);
     c0.setZero();
-    if(index!=(int)knots.size()-1) c0[index+1]=(double)1/delta2;c0[index]=-c0[index+1];
+    if(index!=(int)knots.size()-1){
+        c0[index+1]=(double)1/delta2;
+        c0[index]=-c0[index+1];
+    }
     Eigen::VectorXd c1(size);
     c1.setZero();
     c1[index]=1;
@@ -54,7 +57,19 @@ Eigen::MatrixXd update_coefficent_new(vector<vector<long long>>C,vector<double>k
     return newMat;
 }
 
-
+vector<vector<long long>> generateMatrix(int n) {
+    vector<vector<long long>> C(n + 1, vector<long long>(n + 1, 0));
+    for (int i = 0; i <= n; ++i) {
+        C[i][0] = 1; // C(n, 0) = 1
+        C[i][i] = 1; // C(n, n) = 1
+    }
+    for (int i = 1; i <= n; ++i) {
+        for (int j = 1; j < i; ++j) {
+            C[i][j] = C[i - 1][j - 1] + C[i - 1][j];
+        }
+    }
+    return C;
+}
 
 
 vector<vector<double>> pp_solve_3(int order,vector<double> input_knots,vector<int> dots1,vector<int> difforder1,vector<int> dots2,vector<int> difforder2,vector<int> dots,vector<int> difforder,vector<double> value,vector<int> exist){
@@ -71,6 +86,7 @@ vector<vector<double>> pp_solve_3(int order,vector<double> input_knots,vector<in
     }
    
     vector<vector<long long>>C= generateMatrix(order);
+
     vector<Eigen::MatrixXd> coeff;//存储(t1,t2)-(t_{n-1},t_{n})对应点的0-(n)次系数
 
     //张量运算，每行元素为(f_0,f_1...f_{N-1},m_1/1,m_2/2..m_{n-1}/(n-1)!)对应系数。 m_i为第一个结点i阶导数值，f_i为第i个节点函数值。

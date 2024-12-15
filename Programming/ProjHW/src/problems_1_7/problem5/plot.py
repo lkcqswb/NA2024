@@ -33,7 +33,7 @@ def plot_lines(points, title, dimensions):
     ax.set_ylabel('Dimensions')
     ax.set_zlabel('Y-axis')
     ax.legend() 
-    plt.show()
+    plt.savefig(file_name[:-4]+".png")
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:

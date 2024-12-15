@@ -37,7 +37,6 @@ vector<vector<double>> pp_solve(int order,vector<double> input_knots,vector<int>
     size_t line_index=order*N-2*order-1;
     for (int t=1; t < N-1; t++)
     {
-        double delta=input_knots[t]-input_knots[t-1];
         int starting_line_index=(t-1)*(order);
         for (int j = 0; j < order; j++)
         {
@@ -46,7 +45,7 @@ vector<vector<double>> pp_solve(int order,vector<double> input_knots,vector<int>
         }
     }
     if(!dots.empty()){
-        for (int i=0;i < dots.size(); i++) {
+        for (size_t i=0;i < dots.size(); i++) {
             line_index++;
             double value_dimension=value[i];
             int dot=dots[i],difforders=difforder[i];
@@ -64,7 +63,7 @@ vector<vector<double>> pp_solve(int order,vector<double> input_knots,vector<int>
         }
     }
     if(!dots1.empty()){
-        for (int i=0; i < dots1.size(); i++) {
+        for (size_t i=0; i < dots1.size(); i++) {
             line_index++;
             int dot1=dots1[i],difforders1=difforder1[i],dot2=dots2[i],difforders2=difforder2[i];
             if(dot1<0||dot1>(int)N-1||dot2<0||dot2>(int)N-1){
@@ -116,7 +115,7 @@ vector<vector<double>> pp_solve(int order,vector<double> input_knots,vector<int>
     
 
     vector<vector<double>> result;
-    for (size_t i=0;i<N-1;i++){
+    for (int i=0;i<N-1;i++){
         vector<double> temp;
         for(int j=0;j<=order;j++) temp.push_back(solution[i*(order+1)+j]);
         result.push_back(temp);

@@ -3,6 +3,16 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
 import os
+import json
+
+def read_config(file_name):
+    try:
+        with open(file_name, 'r') as file:
+            config = json.load(file)
+            return config
+    except Exception as e:
+        print(f"Error reading file: {e}")
+        return None
 
 def read_points(file_name):
     points = []
@@ -51,7 +61,7 @@ def plot_points(points, title, center, radius):
     plot_sphere(ax, center, radius)
 
     # 显示图形
-    plt.show()
+    plt.savefig(title+".png")
 
 if __name__ == "__main__":
     if len(sys.argv) != 6:
@@ -61,6 +71,16 @@ if __name__ == "__main__":
     file_name = sys.argv[1]
     radius = float(sys.argv[2])
     center = [float(sys.argv[3]), float(sys.argv[4]), float(sys.argv[5])]
+    
+    
+    config = read_config("config.json")
+    if config is None:
+        sys.exit(1)
+    center = config["centre"]
+    radius = config["radius"]
+    points = config["points"]
+    title = "3D Sphere with Curve"
+    plot_points(points, title, center, radius)
 
     points = read_points(file_name)
     title = os.path.splitext(file_name)[0]

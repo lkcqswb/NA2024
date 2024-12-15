@@ -48,13 +48,6 @@ BSpline::BSpline(json j)
 
     //排序结束
 
-    //增加结点
-    interval = (knots[knots.size()-1]-knots[0])/(knots.size()-1);
-    vector<double> add_knots={};
-    for (size_t i = order-1; i >0; i--) add_knots.push_back(knots[0]-i*interval);
-    knots.insert(knots.begin(), add_knots.begin(), add_knots.end());
-
-    
     
     //json boundary_conditions;
     //if (!j["boundary condition"].is_null()) boundary_conditions = j["boundary condition"];
@@ -64,6 +57,12 @@ BSpline::BSpline(json j)
     if (!j["range"]["end"].is_null()) end=j["range"]["end"];
     else end=knots[knots.size()-1];
     //结束检查
+
+     //增加结点
+    interval = (knots[knots.size()-1]-knots[0])/(knots.size()-1);
+    vector<double> add_knots={};
+    for (size_t i = order-1; i >0; i--) add_knots.push_back(knots[0]-i*interval);
+    knots.insert(knots.begin(), add_knots.begin(), add_knots.end());
 
     //缩放结点
     new_knots={};
@@ -139,15 +138,15 @@ BSpline::BSpline(json j)
 
 vector<double> BSpline::get_value(double x){
     int i;
-    if(x>knots[knots.size()-1]||x<knots[order-1]||x<begin||x>end){
+    if(x>knots[knots.size()-1]||x<knots[offset]||x<begin||x>end){
         cout<<x<<" is out of range"<<endl;
         throw "out of range";
     }
-    if(x==knots[order-1]){//和ppform统一定义域
-        i=order-1;
+    if(x==knots[offset]){//和ppform统一定义域
+        i=offset;
     }
     else{
-        for (i = knots.size()-2; i >=order-1; i--)
+        for (i = knots.size()-2; i >=offset; i--)
         {
             if(x>knots[i]) break;
         }

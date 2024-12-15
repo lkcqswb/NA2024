@@ -1,4 +1,5 @@
 {
+    "dimension":2,
     "order": 3,
     "boundary condition": {
         "equals": [],

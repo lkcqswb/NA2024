@@ -30,9 +30,10 @@ def plot_points(points,title):
     plt.grid()
     
     # 显示图形
-    plt.show()
+    plt.savefig(file_name[:-4]+".png")
 
 if __name__ == "__main__":
+    
     if len(sys.argv) != 2:
         print("Usage: python plot_points.py <filename>")
         sys.exit(1)

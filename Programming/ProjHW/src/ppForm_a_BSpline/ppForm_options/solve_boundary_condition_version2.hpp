@@ -207,21 +207,11 @@ vector<vector<double>> pp_solve_2(int order,vector<double> knots,vector<int> dot
 
     }
 
-    for (size_t i = 0; i < coeff.size(); i++)
-    {
-        cout<<"vec:"<<i<<endl;
-        print2DVector(coeff[i]);
-    }
-    for (size_t i = 0; i < deriv_co.size(); i++)
-    {
-        cout<<"deriv_co:"<<i<<endl;
-        print2DVector(deriv_co[i]);
-    }
+    
     
 
     process_lines(matrix,target);
-    cout<<"matrix:"<<matrix<<endl;
-    cout<<"vec:"<<target<<endl;
+    
     Eigen::FullPivLU<Eigen::MatrixXd> lu_decomp(matrix);
     if((int)lu_decomp.rank()<order){
         
@@ -229,11 +219,11 @@ vector<vector<double>> pp_solve_2(int order,vector<double> knots,vector<int> dot
         cout<<"It may be due to the choice of conditions that leads to near-singularity."<<endl;
     }
     Eigen::VectorXd solution = matrix.colPivHouseholderQr().solve(target);
-    cout<<"sol:"<<solution<<endl;
+
     
 
     vector<vector<double>> result;
-    for (int i=0;i<coeff.size();i++){
+    for (size_t i=0;i<coeff.size();i++){
         vector<double> temp;
         for(int j=0;j<=order;j++) temp.push_back(vec_get_solution(coeff[i][j],solution));
         result.push_back(temp);

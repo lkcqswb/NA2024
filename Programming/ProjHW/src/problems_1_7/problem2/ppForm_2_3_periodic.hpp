@@ -1,5 +1,4 @@
 #pragma once
-
 #include "../../include/json.hpp"
 #include "../../ppForm_a_BSpline/ppForm.hpp"
 #include<vector>
@@ -7,53 +6,94 @@ using json = nlohmann::json;
 using namespace std;
 
 
-
-class ppform_2_3_periodic: public ppForm{
+class ppForm_2_3_periodic: public ppForm{
 private:
-    vector<double> knots; 
     double start,end;
-    vector<int> dir,dot;
-    vector<int> generate_seq(int n){
-        vector<int> result;
-        for (size_t i = 0; i < n; i++)
-        {
-            result.push_back(i);
+    json process_json(json j){
+        if (!j.contains("data points") || !j["data points"].is_array()) {
+            cerr << "Error: 'data points' is missing" << endl;
+            throw "Invalid";
         }
-        return result;
-    }
-    vector<vector<double>> generate_func_value(vector<double> f_values){
-        vector<vector<double>> result;
-        for (size_t i = 0; i < f_values.size(); i++)
-        {
-            result.push_back({f_values[i]});
+
+        vector<double> knots;
+        for (const auto& item : j["data points"]) {
+            if (item.is_number()) {
+                knots.push_back(item.get<double>());
+            } else {
+                cerr << "Error: Non-numeric value in 'data points'" << endl;
+                throw "Non-numeric value in 'data points'";
+            }
         }
-        return result;
-    }
-public:
-    ppform_2_3_periodic(vector<double>input_knots,vector<double> f_values,double istart,double iend):
-    ppForm({
+
+        if (knots.size() < 2) {
+            cerr << "Error: 'data points' must contain at least two values" << endl;
+            throw "Insufficient data points";
+        }
+
+        vector<double> values;
+        if (j.contains("function values") && j["function values"].is_array()) {
+            for (const auto& item : j["function values"]) {
+                if (item.is_number()) {
+                    values.push_back(item.get<double>());
+                } else {
+                    cerr << "Error: Non-numeric value in 'function values'" << endl;
+                    throw "Non-numeric value in 'function values'";
+                }
+            }
+        } else {
+            cerr << "Error: 'function values' is missing or not an array" << endl;
+            throw "'function values' missing or invalid";
+        }
+        
+        
+        if(values.size()!=knots.size()-1){//会少一个
+            throw "invalid";
+        }
+
+        if (!j["range"]["begin"].is_null()) start=j["range"]["begin"];
+        else start=knots[0];
+        if (!j["range"]["end"].is_null()) end=j["range"]["end"];
+        else end=knots[knots.size()-1];
+
+
+        vector<double> points,order;
+
+        for (size_t i = 0; i < knots.size()-1; i++)
+        {
+            points.push_back(i);
+            order.push_back(0);
+        }
+        vector<vector<double>> input_value;
+        for (size_t i = 0; i < values.size(); i++)
+        {
+            input_value.push_back({values[i]});
+        }
+
+        return json {
             {"dimension", 1},
             {"order", 3},
             {"boundary condition", {
-                {"equals", {
-                    {0, 0, 0},
-                    {0, 1, 2},
-                    {static_cast<int>(input_knots.size()) - 1, static_cast<int>(input_knots.size()) - 1, static_cast<int>(input_knots.size()) - 1},
-                    {0, 1, 2}
-                }},
                 {"values", {
-                    generate_seq(input_knots.size() - 1),
-                    vector<int>(input_knots.size() - 1, 0), 
-                    generate_func_value(f_values)
-                }}
+                    points,
+                    order,
+                    input_value
+                }},{
+                    "equals",{
+                        {0,0,0},{0,1,2},{knots.size()-1,knots.size()-1,knots.size()-1},{0,1,2}
+                    }
+                }
             }},
-            {"data points", input_knots},
+            {"data points", knots},
             {"range", {
-                {"end", iend},
-                {"begin", istart}
+                {"end", end},
+                {"begin", start}
             }}
-        },2
-    ),knots(input_knots),start(istart),end(iend){};
+        };
+        
+    }
+        
+public:
+    ppForm_2_3_periodic(json j):ppForm(process_json(j)){};
     double get_value(double t){
         return ppForm::get_value(t)[0];
     }

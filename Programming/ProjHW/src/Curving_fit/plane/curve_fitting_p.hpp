@@ -9,8 +9,11 @@ using namespace std;
 class curve_fitting_p: public ppForm{
 private:
     double start,end;
-    json construct(json j){
+    json construct(json j,string sampling_mode){
         vector<double> knots={};
+        int dimension;
+        if (!j["dimension"].is_null()) dimension=j["dimension"];
+        else cerr<<"no dimension input"<<endl;
 
         vector<vector<double>> points;
         if(!j["points"].is_null()){
@@ -19,11 +22,35 @@ private:
             throw "enadequate information";
         }
         int N=points.size();
-
-        for (int i = 0; i < N; ++i) {
-            double t = static_cast<double>(i) / (N - 1); 
-            knots.push_back(t);
+        if (!j["range"]["begin"].is_null()) start=j["range"]["begin"];
+        else start=0;
+        if (!j["range"]["end"].is_null()) end=j["range"]["end"];
+        else end=1;
+        
+        if(sampling_mode=="equal"){
+            for (int i = 0; i < N; ++i) {
+                double t = static_cast<double>(i) / (N - 1); 
+                knots.push_back((end-start)*t+start);
+            }
+        }else if(sampling_mode=="Chord"){
+            vector<double> chord={0};
+            for (size_t i = 1; i <points.size(); i++)//计算累计弦长
+            {
+                double len=0;
+                for (size_t j = 0; j < points[i].size(); j++) len+=(points[i][j]-points[i-1][j])*(points[i][j]-points[i-1][j]);
+                len=sqrt(len)+chord[chord.size()-1];
+                chord.push_back(len);
+            }
+            for (size_t i = 0; i < points.size(); i++)
+            {
+                knots.push_back((end-start)*chord[i]/chord[chord.size()-1]+start);
+            }
+        }else{
+            cerr<<"no such sampling_mode"<<endl;
+            throw "no such sampling_mode";
         }
+        
+        
         vector<int> dots1={},dots2={},difforder1={},difforder2={};
         vector<vector<double>> value={};
         vector<int> dots={},orders={};
@@ -80,7 +107,7 @@ private:
 
 
         return {
-            {"dimension",2},
+            {"dimension",dimension},
             {"order", j["order"]},
             {"boundary condition", {
                 {"equals",{dots1,difforder1,dots2,difforder2}},
@@ -93,14 +120,14 @@ private:
             }},
             {"data points", knots},
             {"range", {
-                {"end", 1},
-                {"begin", 0}
+                {"end", end},
+                {"begin", start}
             }}
         };
         
     }
 public:
-    curve_fitting_p(json j):ppForm(construct(j),2){
+    curve_fitting_p(json j,string sampling_mode="equal"):ppForm(construct(j,sampling_mode)){
         if(!j["range"]["begin"].is_null()) start=j["range"]["begin"];
         else start=0;
         if(!j["range"]["end"].is_null()) end=j["range"]["end"];

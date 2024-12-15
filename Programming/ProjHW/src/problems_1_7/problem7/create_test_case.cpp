@@ -33,7 +33,7 @@ int main() {
     //{
     //    points.push_back({cos(i),sin(i)*cos(2*i-1),sin(i)*sin(2*i-1)});
     //}
-    points = generateSphericalSpiral(50, 5, radius);
+    points = generateSphericalSpiral(100, 30, radius);
 
     json j;
     j["order"] = 3;

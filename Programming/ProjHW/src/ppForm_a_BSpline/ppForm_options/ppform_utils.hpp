@@ -1,6 +1,7 @@
-#pragma once
+#ifndef pputils
+#define pputils
 #include"../../include/Eigen/Dense"
-
+#include <vector>
 void process_lines(Eigen::MatrixXd& A, Eigen::VectorXd& b) {
     int m = A.rows();  
     int n = A.cols(); 
@@ -37,25 +38,6 @@ double get_fas(int n){
 }
 
 
-vector<vector<long long>> generateMatrix(int n) {
-    vector<vector<long long>> C(n + 1, vector<long long>(n + 1, 0));
-    for (int i = 0; i <= n; ++i) {
-        C[i][0] = 1; // C(n, 0) = 1
-        C[i][i] = 1; // C(n, n) = 1
-    }
-    for (int i = 1; i <= n; ++i) {
-        for (int j = 1; j < i; ++j) {
-            C[i][j] = C[i - 1][j - 1] + C[i - 1][j];
-        }
-    }
-    return C;
-}
 
-void print2DVector(const vector<vector<double>>& vec) {
-    for (const auto& row : vec) {
-        for (const auto& element : row) {
-            std::cout << element << " ";
-        }
-        std::cout << std::endl; 
-    }
-}
+
+#endif
