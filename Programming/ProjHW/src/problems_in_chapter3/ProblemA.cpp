@@ -1,5 +1,5 @@
-#include "..\problems_1_7\problem2\ppform_2_3_natural.hpp"
-#include "..\problems_1_7\problem3\BSpline_2_3_natural.hpp"
+#include "../problems_1_7/problem2/ppform_2_3_natural.hpp"
+#include "../problems_1_7/problem3/BSpline_2_3_natural.hpp"
 #include <iostream>
 #include <vector>
 #include <fstream> 

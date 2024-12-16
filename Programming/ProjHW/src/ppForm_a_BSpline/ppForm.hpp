@@ -141,8 +141,15 @@ ppForm::ppForm(json j,int version)
 
 vector<double> ppForm::get_value(double x){
     if(x>knots[knots.size()-1]||x<knots[0]||x<begin||x>end){
-        cout<<x<<" is out of range"<<endl;
-        throw "out of range";
+        if(abs(x-min(end,knots[knots.size()-1]))<1e-4){
+            x=min(end,knots[knots.size()-1]);
+        }else if(abs(x-max(begin,knots[0]))<1e-4){
+            x=max(begin,knots[0]);
+        }
+        else{
+            cout<<x<<" is out of range"<<endl;
+            throw std::runtime_error( "out of range");
+        }
     }
     
     int i;

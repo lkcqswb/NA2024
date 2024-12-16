@@ -103,7 +103,7 @@ bool detect_intersect(const json& j) {
     // 离散化样条曲线
     std::vector<PointND> points;
     for (int i = 0; i <= num_samples; ++i) {
-        double t = start + i * (end - start) / num_samples;
+        double t = max(min(start + i * (end - start) / num_samples,end),start);
         t = clamp(t, start, end);
         auto value = B.get_value(t);
         points.push_back({value});

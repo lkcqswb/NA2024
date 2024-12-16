@@ -1,5 +1,5 @@
-#include "..\problems_1_7\problem3\BSpline_2_3_complete.hpp"
-#include "..\include\json.hpp"
+#include "../problems_1_7/problem3/BSpline_2_3_complete.hpp"
+#include "../include/json.hpp"
 #include <vector>
 using namespace std;
 using json = nlohmann::json;

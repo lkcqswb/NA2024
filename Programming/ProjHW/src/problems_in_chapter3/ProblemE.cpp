@@ -5,7 +5,7 @@
 #include <string>
 #include "../include/json.hpp"
 #include "../bonus/intersect.hpp"
-#define pi M_PI
+#define pi 3.1415926535
 using json = nlohmann::json;
 
 
@@ -44,7 +44,7 @@ void write_errors_to_file(int num_control,int num_plot) {
         knot2.push_back(r2((double)(i * 6 * pi) / num_control));
         knot3.push_back(r3((double)(i * 2 * pi) / num_control));
     }
-    
+
     // JSON 格式的参数设置
     json j1 = {
         {"dimension", 2},
@@ -113,16 +113,20 @@ void write_errors_to_file(int num_control,int num_plot) {
     cout<<"fig3 "<<endl;
     outfile << "fig3 "<<endl;
     for (size_t i = 0; i <= num_plot; i++) {
-        double t3 = min((double)(2 * pi * i) / num_plot,2 * 3.1415);
-        vector<double> pe3_value = pe3.get_value(t3);
-        vector<double> be3_value = be3.get_value(t3);
-        vector<double> pc3_value = pc3.get_value(t3);
-        vector<double> bc3_value = bc3.get_value(t3);
-        outfile <<" equal length ppForm,"<<pe3_value[0] << "," << pe3_value[1]<<","<<pe3_value[2] <<endl;
-        outfile <<" equal length BSpline,"<<be3_value[0] << "," << be3_value[1]<<","<<be3_value[2]<< endl;
+        try{
+            double t3 = min((double)(2 * pi * i) / num_plot,6.28315);
+            vector<double> pe3_value = pe3.get_value(t3);
+            vector<double> be3_value = be3.get_value(t3);
+            vector<double> pc3_value = pc3.get_value(t3);
+            vector<double> bc3_value = bc3.get_value(t3);
+            outfile <<" equal length ppForm,"<<pe3_value[0] << "," << pe3_value[1]<<","<<pe3_value[2] <<endl;
+            outfile <<" equal length BSpline,"<<be3_value[0] << "," << be3_value[1]<<","<<be3_value[2]<< endl;
 
-        outfile << "cumulative chordal length ppform," << pc3_value[0] << "," << pc3_value[1]<<","<<pc3_value[2] << endl;
-        outfile << "cumulative chordal length BSpline," << bc3_value[0] << "," << bc3_value[1]<<","<<bc3_value[2] << endl;
+            outfile << "cumulative chordal length ppform," << pc3_value[0] << "," << pc3_value[1]<<","<<pc3_value[2] << endl;
+            outfile << "cumulative chordal length BSpline," << bc3_value[0] << "," << bc3_value[1]<<","<<bc3_value[2] << endl;
+        }
+        catch (const char* e) {
+        }
     }
     
         

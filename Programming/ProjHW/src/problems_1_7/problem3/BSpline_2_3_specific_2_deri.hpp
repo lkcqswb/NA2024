@@ -1,6 +1,6 @@
 #pragma once
 #include "../../include/json.hpp"
-#include "../../ppform_a_BSpline/BSpline.hpp"
+#include "../../ppForm_a_BSpline/BSpline.hpp"
 #include<vector>
 using json = nlohmann::json;
 using namespace std;
