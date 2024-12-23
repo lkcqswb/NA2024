@@ -1,0 +1,157 @@
+
+\documentclass[a4paper]{article}
+%\usepackage[affil-it]{authblk}
+\usepackage[backend=bibtex,style=numeric]{biblatex}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{geometry}
+\usepackage{caption}
+\usepackage{amssymb}
+\usepackage{float}
+\usepackage{ctex}
+\geometry{margin=1.5cm, vmargin={0pt,1cm}}
+\setlength{\topmargin}{-1cm}
+\setlength{\paperheight}{29.7cm}
+\setlength{\textheight}{25.3cm}
+
+\begin{document}
+% ==================================================
+\title{Numerical Analysis Homework 6}
+
+\author{罗开诚 3220103383
+  \thanks{Electronic address: \texttt{3220103383@zju.edu.com}}}
+%\affil{(Information and Computational Science 2201), Zhejiang University}
+
+\date{Due time: \today}
+
+\maketitle
+
+\begin{abstract}
+    Solutions to various numerical analysis problems.
+\end{abstract}
+
+% ============================================
+
+\section*{I}
+(a).
+    Using Newton's interpolation formula, we can derive the interpolation formula\\
+    \[ p(x)=\frac{f(1)-f(-1)-2*f'(0)}{2}(x+1)x^2+(f'(0)-f(0)+f(-1))(x+1)x+(f(0)-f(-1))(x+1)+f(-1) \]\\
+    Substituting \(\int_{-1}^{1}p(x)dx=\frac{2}{6}(f(-1)+f(1)+4f(0))\)\\
+    This gives us Simpson's rule\\
+    \[ \int_{-1}^{1}y(x)dx=\int_{-1}^{1}p(x)+E_s(y) \]\\
+(b).
+According to the linear interpolation remainder theorem, we have\\
+\[ f(x) - P(x) = \frac{f^{(4)}(\xi)}{4!} (x^2-1)x^2, \quad -1 \leq \xi \leq 1 \]\\
+Integrating both sides from \( -1 \) to \( 1 \)\\
+\[ \int_{-1}^1 f(x)dx - \int_{-1}^1 P(x)dx = \frac{1}{4!} \int_{-1}^1 f^{(4)}(\xi)x^2(x^2-1) dx \]\\
+\[ \int_{-1}^{1}p(x)dx=\frac{2}{6}(f(-1)+f(1)+4f(0)) \]\\
+So\\
+\[ E_S(y) = \frac{1}{4!} \int_{-1}^{1} f^{(4)}(\xi)x^2(x^2-1)dx \]\\
+When \( x \in [-1,1] \), \( x^2(x^2-1) \leq 0 \), \\
+\[ \int_{-1}^{1} f^{(4)}(\xi)x^2(x^2-1) dx\in [min(f^{(4)}) \int_{-1}^{1} x^2(x^2-1) dx,max(f^{(4)})\int_{-1}^{1} x^2(x^2-1) dx ] \]\\
+\( f^{(4)}(x) \) is continuous on the interval, by the mean value theorem, there exists a point \(\eta\) on \([a,b]\), such that\\
+\[ \int_{-1}^{1} f^{(4)}(\xi)x^2(x^2-1) dx = f^{(4)}(\eta) \int_{-1}^{1} x^2(x^2-1) dx \]\
+
+\[ \int_{-1}^{1} x^2(x^2-1) dx = -\frac{4}{15} \]\\
+Therefore, the error estimate is\\
+\[ E_S(y) = -\frac{1}{90}f^{(4)}(\eta)dx \]\\
+(c)
+Divide the interval into 2m equal parts, and apply Simpson's rule on each \([x_{2k-2},x_{2k}]\), we have\\
+\[ \int_{x_{2k-2}}^{x_{2k}}y(x)dx \]\\
+\[ =\int_{-1}^{1}y(t*h+x_{2k-1})hdt \]\\
+\[ =\frac{2h}{6}(y(x_{2k-2}+x_{2k}+4x_{2k-1}))-\frac{h^5}{90}y^{(4)}(\eta_{k}) \]\\
+Summing up\\
+The original expression equals \(=\Sigma_{k=1}^{m}\frac{2h}{6}(y(x_{2k-2}+x_{2k}+4x_{2k-1}))\)\\
+The error is \(=\Sigma_{k=1}^{m}-\frac{h^5}{90}y^{(4)}(\eta_{k})=-\frac{h^4}{90}y^{(4)}(\eta)\)\\
+\section*{II}
+
+(a) It is easy to know \(\int_{0}^{1}e^{-x^2}\in C^2\)\\
+By Theorem 6.18\\
+\[ E_n^T(f)=-\frac{1}{12}(\frac{1}{n})^2f''(\xi) \]\\
+\[ |f''(\xi)| =|(4x^2-2)|e^{-x^2} \]\\
+\[ f'''(x)=(8x-8x^3+4x)e^{-x^2}>0 \]\\
+\[ |f''(\xi)|\leq max(f''(0),f''(1))=2 \]\\
+To make the error less than \(0.5*10^{-6}\)\\
+We only need to make \(n^2\geq 10^6*4/12\)\\
+\[ n\geq 578 \]\\
+(b)
+By the Chinese lecture notes Theorem 6.3.3\\
+\[ R_{f,S_n}=-\frac{(b-a)}{2880}(\frac{2(b-a)}{n})^4f^{(4)}(\eta) \]\\
+Substituting we get\\
+\[ R_{f,S_n}=-\frac{1}{2880}(\frac{16}{n^4})f^{(4)}(\eta) \]\\
+\[ f^{(4)}(x)=(16x^4-48x^2+12)e^{-x^2} \]\\
+\[ f^{(5)}(x)=8e^{-x^2}x(-4x^4+20x^2-15) \]\\
+\[ |f^{(4)}(x)|\leq max(f^{(4)}(0),f^{(4)}(1),f^{(4)}(\frac{5-\sqrt{10}}{2}))=12 \]\\
+\[ n>19.1088... \]\\
+\[ n \geq 20 \]\
+\section*{III}
+(a)\\
+Find \(\pi_2\), such that\\
+\[ \forall p \in \mathcal{P}_1, \quad \int_{0}^{+\infty} p(t) \pi_2(t) \rho(t) \, dt = 0. \]\\
+Let \(p(t)=kt+c,\pi_2(t)=t^2+at+b\)\\
+\[ \int_{0}^{+\infty} p(t) \pi_2(t) \rho(t) \, dt=\int_{0}^{+\infty} e^{-t} (kt^3+(ak+c)t^2+(ac+bk)t+bc)dt \]\\
+\[ =k 3!+(ak+c)2!+(ac+bk)1!+bc0!=0 \] for any \(k,c\)\\
+Calculate to get \(a=-4,b=2\)\\
+(b)\\
+Find the roots to get \(t^2-4x+2=0\)\\
+\[ x=2-\sqrt{2},2+\sqrt{2} \]\\
+There is \(w_1+w_2=\int_{0}^{+\infty}e^{-t}=1\)\\
+\[ (2-\sqrt{2})w_1+(2+\sqrt{2})w_2=1\]
+\[ w_1=\frac{2+\sqrt{2}}{4},w_2=\frac{2-\sqrt{2}}{4}\]\
+Therefore,\\
+\[ \int_{0}^{\infty}f(x)e^{-x}dx=\frac{2+\sqrt{2}}{4}f(2-\sqrt{2})+\frac{2-\sqrt{2}}{4}f(2+\sqrt{2})+E_2(f)\]\
+Refer to the proof of problem (4), using Hermite interpolation\\
+\[ f(x)=\Sigma_{m=1}^{n}(h_m(x)f_m+q_m(x)f'_m)+\frac{f^{2n}(\xi)}{(2n)!}\Pi(x-x_i)^2\]\
+Let \(I(\Pi(x-x_i)\Pi_{i\neq m}(x-x_i))=0\), solve for \(x_i\) to get the same Gauss-Laguerre formula\\
+The error is\\
+\[ \int_{0}^{+\infty}\frac{f^{4}(\xi)}{(4)!}e^{-t}(x-(2-\sqrt{2}))^2(x-(2+\sqrt{2}))^2dx\]\
+By the mean value theorem, there exists \(\tau\), such that\\
+\[ E_2(f)=\frac{f^{4}(\tau)}{24}\int_{0}^{+\infty}e^{-t}(x-(2-\sqrt{2}))^2(x-(2+\sqrt{2}))^2\]\
+\[ =\frac{f^{4}(\tau)}{6}\]\
+(c)\\
+The predicted result is\\
+\[ \frac{2+\sqrt{2}}{4}*\frac{1}{3-\sqrt{2}}+\frac{2-\sqrt{2}}{4}*\frac{1}{3+\sqrt{2}}=0.5714285714...\]\
+The true value \( I =0.596347361\)\\
+The error value \(0.0249187896\)\\
+\(f^{(4)}(x)=\frac{24}{(1+t)^5}\)\\
+Corresponding \(\tau=1.7612556\)\\
+(IV)
+(a)
+\(l_m(x)=\Pi_{i\neq m}\frac{x-x_i}{x_m-x_i} \in P_{n-1},l(x_m)=1\)\\
+For \(n\neq m\), \(l_n(x_m)=0\)\\
+Therefore, substituting \(x=x_m\)\\
+We get \((a_m+b_mx_m)f(x_m)+(c_m+d_mx_m)f'(x_m)=f(x_m)\)\\
+Differentiate\\
+Since \(m\neq n\),\\
+\(l^2_n(x_m)=0,l_n(x_m)l'_n(x_m)=0\)\\
+The first derivative is still determined by a single formula\\
+\(f(x_m)(b_m+2(a_m+b_mx_m)(l'_m(x_m)))+f'(x_m)(d_m+2(c_m+d_mx_m)((l'_m(x_m))))=f'(x_m)\)
+Construct the solution, let\\
+\(a_m+b_mx_m=1,c_m+d_mx_m=0,b_m+2(a_m+b_mx_m)(l'_m(x_m))=0,d_m+2(c_m+d_mx_m)((l'_m(x_m)))=1\)\\
+Solve to get \(a_m=1+2x_ml'_m(x_m),b_m=-2l'_m(x_m)\)\
+\(c_m=-x_m,d_m=1\)\\
+By the uniqueness of Hermit interpolation, this is also the only solution\\
+(b)\
+\(\forall p \in P_{2n-1},x_1...x_n\)\\
+\(p(x)=\Sigma_{m=1}^{n}(h_m(x)f_m+q_m(x)f'_m)\)\
+\(I_n(f)=\Sigma_{m=1}^{n}(I(h_m(x)) f_m+I(q_m(x))f'_m)\)\
+Where \(I(h_m(x))\) is the corresponding integral result of \(h_m(x)\), and \(I(q_m(x))\) is the same\\
+From (a) we know\\
+\(w_m=I(h_m(x))=I((1+2x_ml'_m(x_m)-2l'_m(x_m)t)(l_m^2(t)))\)\
+\(u_m=I(q_m(x))=I((t-x_m)(l_m^2(t)))\)\
+(c)\
+\(q_m(x)=x-x_m\)\
+We get \(I(\Pi(x-x_i)\Pi_{i\neq m}(x-x_i))=0\)\
+Let \(v(x)=\Pi(x-x_i)\), which is orthogonal to \(l_k(x)\)\\
+If \(l_k(x)\) is linearly dependent, there exist coefficients \(\Sigma_{k}\lambda_kl_k(t)=0\)\
+Regard \(\lambda_k\) as \(f_k\), it can be known that the corresponding interpolation polynomial is always 0.\
+Thus, it can be concluded that \(f_k=\lambda_k=0\)\
+Therefore, \(l_k(x)\) is linearly independent\\
+n-1 linearly independent polynomials in \(P_{n-1}\) can span the entire \(P_{n-1}\) space.\\
+So in order to make \(u_k=0\)\
+We need to make \(v(x)=\Pi(x-x_i)\) orthogonal to the \(P_{n-1}\) space\\
+\section*{ \center{\normalsize {Acknowledgement}} }
+Use GPT-4 for quick template transformation, and use Kimi AI to correct English grammar.
+
+\end{document}
+
