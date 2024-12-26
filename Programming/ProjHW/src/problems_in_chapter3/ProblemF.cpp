@@ -34,9 +34,9 @@ void divide_truncate(vector<double> t,string file_name,int order){
             }
         for (size_t layer = 1; layer < order+2; layer++)
         {
-            for (i = layer; i < order+2; i++)
+            for (i = order+1; i >= layer; i--)
             {
-                value[i]=(value[i]-value[i-1])/(t[i]-t[i-1]);
+                value[i]=(value[i]-value[i-1])/(t[i]-t[i-layer]);
                 outfile<<"t_{"<<i-1<<","<<layer<<"}"<< x << " " << value[i] << endl;
             }
         }

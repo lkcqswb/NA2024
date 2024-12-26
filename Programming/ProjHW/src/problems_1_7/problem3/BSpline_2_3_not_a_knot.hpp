@@ -76,7 +76,7 @@ private:
                     input_value
                 }},
                 {
-                    "exist",{1,knots.size()-2}
+                    "exists",{1,knots.size()-2}
                 }
             }},
             {"data points", knots},

@@ -143,7 +143,7 @@ vector<vector<double>> pp_solve_2(int order,vector<double> knots,vector<int> dot
     Eigen::VectorXd target(condition_numbers);
 
     size_t line_index=0;
-    if(!dots.empty()){
+    if(!new_dots.empty()){
         int i=0;
         for (;line_index < new_dots.size(); line_index++) {
             double value_dimension=new_value[i];
@@ -168,7 +168,7 @@ vector<vector<double>> pp_solve_2(int order,vector<double> knots,vector<int> dot
     }
     if(!dots1.empty()){
         int i=0;
-        for (; line_index < dots1.size()+dots.size(); line_index++) {
+        for (; line_index < dots1.size()+new_dots.size(); line_index++) {
             int dot1=dots1[i],difforders1=difforder1[i],dot2=dots2[i],difforders2=difforder2[i];
             if(dot1<0||dot1>(int)knots.size()-1||dot2<0||dot2>(int)knots.size()-1){
                 cout<<"no such point: "<<dot1<<" or "<<dot2<<endl;

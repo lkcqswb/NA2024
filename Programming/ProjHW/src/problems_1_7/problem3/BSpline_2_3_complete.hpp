@@ -13,7 +13,7 @@ private:
 
     json process_json(json j){
         if (!j.contains("data points") || !j["data points"].is_array()) {
-            cerr << "Error: 'data points' is missing" << endl;
+            cout << "Error: 'data points' is missing" << endl;
             throw "Invalid";
         }
 
@@ -22,13 +22,13 @@ private:
             if (item.is_number()) {
                 knots.push_back(item.get<double>());
             } else {
-                cerr << "Error: Non-numeric value in 'data points'" << endl;
+                cout << "Error: Non-numeric value in 'data points'" << endl;
                 throw "Non-numeric value in 'data points'";
             }
         }
 
         if (knots.size() < 2) {
-            cerr << "Error: 'data points' must contain at least two values" << endl;
+            cout << "Error: 'data points' must contain at least two values" << endl;
             throw "Insufficient data points";
         }
 
@@ -38,15 +38,16 @@ private:
                 if (item.is_number()) {
                     values.push_back(item.get<double>());
                 } else {
-                    cerr << "Error: Non-numeric value in 'function values'" << endl;
+                    cout << "Error: Non-numeric value in 'function values'" << endl;
                     throw "Non-numeric value in 'function values'";
                 }
             }
         } else {
-            cerr << "Error: 'function values' is missing or not an array" << endl;
+            cout << "Error: 'function values' is missing or not an array" << endl;
             throw "'function values' missing or invalid";
         }
         if(values.size()!=knots.size()){
+            cout<<"invalid"<<endl;
             throw "invalid";
         }
 
@@ -58,6 +59,7 @@ private:
         vector<double> value;
         if (!j["derivation"].is_null()) value=j["derivation"].get<vector<double>>();
         if(j["derivation"].is_null()||value.size()!=2){
+            cout<<"invalid"<<endl;
             throw "invalid";
         }
 
