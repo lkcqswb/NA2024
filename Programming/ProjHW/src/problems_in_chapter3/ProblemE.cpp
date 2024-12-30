@@ -35,7 +35,9 @@ vector<double>r3(double t){
 
 void write_errors_to_file(int num_control,int num_plot) {
     ofstream outfile("Pe.txt");
-    
+    if(num_control==160){
+        cout<<"It may take a while to paint 12 pictures with 160 control points"<<endl;
+    }
 
     // 控制点的生成,题目中没规定控制点的选取，就随便选了，参数化在后续程序中
     vector<vector<double>> knot1, knot2, knot3;

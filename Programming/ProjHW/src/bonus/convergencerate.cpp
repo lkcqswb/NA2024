@@ -104,7 +104,7 @@ int main() {
     pair<double, double> domain = {0.0, M_PI};
     vector<int> n_values;
     // 节点数
-    for (size_t i = 2; i < 9; i++)
+    for (size_t i = 2; i < 8; i++)
     {
         n_values.push_back(pow(2,i));
     }

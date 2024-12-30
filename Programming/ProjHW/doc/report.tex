@@ -40,11 +40,15 @@
 
 % ============================================
 \section*{Design Document}
+
+\subsection*{base class (any order, knots, and arbitrary boundary conditions)}
 The design revolves around two splines, \texttt{ppForm} and \texttt{BSpline}, for which two base classes \texttt{src/ppForm\_a\_BSpline/BSpline.hpp} and \texttt{src/ppForm\_a\_BSpline/ppForm.hpp} have been designed. In reality, these two base classes implement spline calculations of any order, knots, and arbitrary boundary conditions, using JSON as the control input.
 
 \subsection*{How to Use the Program}
 
-The base class requires the following JSON input:
+The base class requires the following JSON input:\\
+\\
+\textbf{!!!The ppform and Bspline of all five boundary conditions thereafter are implemented by directly inheriting the base class and standardizing the input JSON.}
 
 \begin{verbatim}
 {
@@ -82,9 +86,12 @@ From these two base classes, it is very easy to control the input and output, in
 
 \subsection*{Base Class Implementation Method}
 
+\textbf{!!The specific approach is to fix the unknowns and automatically construct the boundary conditions as equations, making it easier to generalize without the need to discuss each boundary condition individually.}
+\\
 Next, the implementation methods of these two base classes are introduced.
 
-ppForm: First, read all JSON information into private variables, then scale each knot so that the average value of the intervals is 1, otherwise it will cause a large numerical calculation error in the subsequent process. In fact, the fitted function is \(f(t) = S(at)\), where \(a\) is the average interval previously. Similarly, for the derivative values, they should also be scaled, multiplied by the power of \(a\), and the order is the order of the derivative. In this way, when the fitted function is input \(t\) later, only \(f(t/a) = S(t)\) needs to be calculated.
+\textbf{ppForm}\\
+ First, read all JSON information into private variables, then scale each knot so that the average value of the intervals is 1, otherwise it will cause a large numerical calculation error in the subsequent process. In fact, the fitted function is \(f(t) = S(at)\), where \(a\) is the average interval previously. Similarly, for the derivative values, they should also be scaled, multiplied by the power of \(a\), and the order is the order of the derivative. In this way, when the fitted function is input \(t\) later, only \(f(t/a) = S(t)\) needs to be calculated.
 
 When calculating the coefficients of each interval, we process each dimension so that each dimension corresponds to a set of different coefficients. The function values, derivative values, and other equation conditions corresponding to each dimension are input into the corresponding functions in the file \texttt{src/ppForm\_a\_BSpline/ppForm\_options} to obtain the coefficients corresponding to each interval.
 
@@ -997,13 +1004,19 @@ Draw
 \caption{PF\_fig3}
 \end{figure}
 
+Verify 3.38\\
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{../figure/PF_fig4.png}
+    \caption{B\_0\^3}
+\end{figure}
 
 \section*{Bonus 1}
 Using jsoncpp:
 The program accepts JSON as input and can freely combine various equations and assign various boundary conditions, accepting specified ranges, arbitrary order, nodes, and dimensions.
 
 \section*{Bonus 2}
-Implemented arbitrary-order ppForm and BSpline.
+Implemented arbitrary-order( arbitrary-dimension) ppForm and BSpline.
 Also supports free combination of any boundary conditions.
 
 \section*{Bonus 3}
